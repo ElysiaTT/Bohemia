@@ -1,0 +1,5 @@
+---
+import Base from '../../layouts/Base.astro';
+import notes from '../../data/notes.json';
+---
+<Base title="碎片" description="未成篇的念头、日常的小发现，以及一些值得保留的瞬间。"><div class="wrap page-wrap notes-page"><header class="page-heading"><span class="eyebrow">SMALL NOTES, BIG LITTLE WORLD</span><h1>生活，不止正文<span>.</span></h1><p>未成篇的念头，和日常里偶然捡到的光。</p></header><div class="notes-intro"><span class="status-dot"></span> 随手记录，不定期更新。<span class="demo-label">示例碎片</span></div><div class="notes-timeline">{notes.map(note => <article class="note-entry" id={note.id}><div class="note-date"><time datetime={note.date}>{note.date.replaceAll('-', '.')}</time><span aria-hidden="true">↘</span></div><div class="note-body"><p>{note.content}</p><span class="note-tag">#{note.tag}</span></div></article>)}</div><div class="notes-bottom">生活的意义，藏在这些小事情里。<span aria-hidden="true">✳</span></div></div></Base>

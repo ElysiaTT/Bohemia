@@ -1,0 +1,82 @@
+---
+import site from '../data/site.json';
+import Icon from '../components/Icon.astro';
+import { withBase } from '../lib/posts';
+import '../styles/global.css';
+
+interface Props { title?: string; description?: string; image?: string; article?: boolean; noindex?: boolean }
+const { title, description = site.description, image = 'images/bohemia-og.png', article = false, noindex = false } = Astro.props;
+const pageTitle = title ? `${title} · ${site.title}` : `${site.title} — ${site.subtitle}`;
+const canonical = new URL(Astro.url.pathname, Astro.site || Astro.url.origin);
+const ogImage = new URL(withBase(image), Astro.site || Astro.url.origin);
+const nav = [ ['writing/', '文章'], ['notes/', '碎片'], ['archive/', '归档'], ['about/', '关于'] ];
+const active = (path: string) => Astro.url.pathname.startsWith(withBase(path)) || (path === 'writing/' && Astro.url.pathname.startsWith(withBase('posts/')));
+---
+<!doctype html>
+<html lang={site.language}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#f5f1e8" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="generator" content={Astro.generator} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
+    <link rel="icon" type="image/svg+xml" href={withBase('favicon.svg')} />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" type="application/rss+xml" title={`${site.title} RSS`} href={withBase('rss.xml')} />
+    <meta property="og:type" content={article ? 'article' : 'website'} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content={site.title} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:locale" content="zh_CN" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <title>{pageTitle}</title>
+    <script is:inline>
+      (() => {
+        let theme;
+        try { theme = localStorage.getItem('bohemia-theme'); } catch {}
+        document.documentElement.dataset.theme = theme === 'dark' || (!theme && matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+      })();
+    </script>
+  </head>
+  <body id="top">
+    <a class="skip-link" href="#main">跳到正文</a>
+    <header class="site-header wrap">
+      <a class="brand" href={withBase()} aria-label={`${site.title} 首页`}>
+        <span class="brand-icon" aria-hidden="true"><svg width="31" height="31" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="13" stroke="currentColor" stroke-width="1.7" /><circle cx="16" cy="16" r="9" stroke="currentColor" stroke-width=".8" /><circle cx="16" cy="16" r="4" fill="currentColor" /><circle cx="16" cy="16" r="1.2" fill="var(--paper)" /></svg></span>
+        <span class="wordmark">{site.title}<span class="brand-period">.</span></span>
+      </a>
+      <span class="brand-note">a personal rhapsody</span>
+      <nav class="desktop-nav" aria-label="主导航">
+        {nav.map(([path, label]) => <a class:list={{ active: active(path) }} aria-current={active(path) ? 'page' : undefined} href={withBase(path)}>{label}</a>)}
+      </nav>
+      <div class="header-tools">
+        <button class="icon-button search-toggle" aria-label="搜索文章" title="搜索文章（/）"><Icon name="search" size={19} /><kbd>/</kbd></button>
+        <span class="tool-divider" aria-hidden="true"></span>
+        <button class="icon-button theme-toggle" aria-label="切换至深色模式" title="切换主题"><Icon name="moon" class="moon-icon" size={19} /><Icon name="sun" class="sun-icon" size={19} /></button>
+        <button class="icon-button menu-toggle" aria-label="打开导航菜单" aria-expanded="false" aria-controls="mobile-nav"><Icon name="menu" size={21} /></button>
+      </div>
+    </header>
+    <nav class="mobile-nav wrap" id="mobile-nav" aria-label="移动端导航" hidden>{nav.map(([path, label]) => <a aria-current={active(path) ? 'page' : undefined} href={withBase(path)}>{label}<Icon name="diagonal" size={15} /></a>)}</nav>
+    <main id="main"><slot /></main>
+    <footer class="site-footer wrap">
+      <div class="footer-top"><a href={withBase()} class="footer-brand">{site.title}<span>.</span></a><p>{site.subtitle}</p><a class="back-top" href="#top" aria-label="回到页面顶部">回到顶部 <span aria-hidden="true">↑</span></a></div>
+      <div class="footer-bottom"><span>© {new Date().getFullYear()} {site.author} <span class="footer-dot">·</span> Written in my own key.</span><div>{site.github && <a href={site.github} target="_blank" rel="noopener noreferrer">GitHub <Icon name="diagonal" size={12} /></a>}<a href={withBase('rss.xml')}>RSS <Icon name="rss" size={13} /></a><a href={withBase('about/#colophon')}>关于本站 <Icon name="diagonal" size={12} /></a></div></div>
+    </footer>
+    <dialog class="search-dialog" id="search-dialog" aria-labelledby="search-title" data-index={withBase('search.json')}>
+      <div class="search-dialog-top"><span class="eyebrow" id="search-title">FIND SOMETHING GOOD</span><button class="icon-button search-close" aria-label="关闭搜索"><Icon name="close" /></button></div>
+      <label class="search-input-wrap"><Icon name="search" size={22} /><input type="search" id="search-input" placeholder="搜索文章、话题或关键词…" aria-label="搜索文章、话题或关键词" autocomplete="off" /></label>
+      <div class="search-results" id="search-results" aria-live="polite"><p class="search-hint">输入关键词，寻找一段感兴趣的文字。</p></div>
+      <div class="search-dialog-footer"><span>搜索标题、标签与正文</span><span><kbd>esc</kbd> 关闭</span></div>
+    </dialog>
+    <script>
+      import '../scripts/client';
+    </script>
+  </body>
+</html>

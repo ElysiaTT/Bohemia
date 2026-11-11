@@ -1,0 +1,8 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import { getPosts, postUrl } from '../../lib/posts';
+const posts = await getPosts();
+const years = [...new Set(posts.map(post => post.data.date.getUTCFullYear()))];
+---
+<Base title="归档" description="沿着时间的线索，重访每一篇文章。"><div class="wrap page-wrap archive-page"><header class="page-heading"><span class="eyebrow">THE BACK CATALOGUE</span><h1>时间，会留下痕迹<span>.</span></h1><p>沿着时间的线索，重听每一次认真写下的声音。</p></header><div class="archive-summary"><span>目前留下 <strong>{posts.length}</strong> 篇文字</span><span>写作未完，持续更新 <span aria-hidden="true">↗</span></span></div>{years.map(year => <section class="archive-year"><h2>{year}<span>{posts.filter(post => post.data.date.getUTCFullYear() === year).length} 篇</span></h2><div>{posts.filter(post => post.data.date.getUTCFullYear() === year).map(post => <a class="archive-row" href={postUrl(post)}><time datetime={post.data.date.toISOString()}>{String(post.data.date.getUTCMonth() + 1).padStart(2, '0')}.{String(post.data.date.getUTCDate()).padStart(2, '0')}</time><span class="archive-title">{post.data.title}</span><span class="category-label">{post.data.category}</span><Icon name="diagonal" size={18} /></a>)}</div></section>)}</div></Base>

@@ -1,0 +1,33 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import site from '../../data/site.json';
+import { withBase } from '../../lib/posts';
+---
+<Base title="关于" description="Bohemia，名字来自 Queen 的《波西米亚狂想曲》。不同的乐队，不同的专栏，同一个自由表达的舞台。">
+  <div class="wrap page-wrap about-page">
+    <header class="page-heading"><span class="eyebrow">BEHIND THE RECORD</span><h1>你好，这里是 {site.title}<span>.</span></h1><p>不同的声音，同一场共鸣。</p></header>
+    <div class="about-hero-image"><img src={withBase('images/bohemia-cover.svg')} width="1200" height="500" alt="Bohemia 原创黑胶封套与交织的声波" /><span>DIFFERENT VOICES. ONE STAGE.</span></div>
+    <div class="about-content">
+      <aside><span class="eyebrow">THE INSPIRATION</span><h2>不止一种声音，<br />不止一种可能。</h2><p class="inspiration-credit">Inspired by Queen<br /><em>Bohemian Rhapsody</em></p></aside>
+      <div class="prose">
+        <h2>为什么叫 Bohemia？</h2>
+        <p>这个名字，来自皇后乐队 Queen 的《Bohemian Rhapsody》（《波西米亚狂想曲》）。借这个名字，为个人的表达留一个自由的空间。</p>
+        <p>技术可以与生活并肩，认真思考也可以与随手记录共存。不急着把自己归进一种风格，也不要求每一篇文字都用同一种方式开场。</p>
+        <blockquote><p>让不同的声音，各自成立，也彼此共鸣。</p></blockquote>
+        <h2>把博客想象成一个舞台</h2>
+        <p>这里的各个专栏，会以不同摇滚乐队为灵感。每个专栏像一支乐队，有自己的性格、关注的世界和表达方式；它们一起构成 Bohemia。</p>
+        <p>乐队是组织内容的灵感，文字依然可以写向任何值得探索的地方。一段技术笔记、一个日常片刻，或一份还没有结论的思考，都可以找到自己的声部。</p>
+        <h2>关于这份初稿</h2>
+        <p>舞台已经搭起，阵容慢慢成形。现有文章与碎片是用于展示排版的原创示例内容，并非博主真实经历。专栏阵容、文章和个人介绍会随着这个小站一起生长。</p>
+        {(site.github || site.email) && <><h2>保持联系</h2><div class="contact-links">{site.github && <a href={site.github} target="_blank" rel="noopener noreferrer"><Icon name="github" size={18} /> GitHub <Icon name="diagonal" size={14} /></a>}{site.email && <a href={`mailto:${site.email}`}><Icon name="mail" size={18} /> 写封邮件</a>}</div></>}
+        <h2 id="colophon">关于本站</h2>
+        <p>本站使用 Astro 构建，文章以 Markdown 保存，面向 GitHub Pages 发布。不依赖后台服务，没有追踪脚本。支持明暗主题、全文搜索与 RSS 订阅。</p>
+        <p>奶油纸色、酒红色与黑胶纹路，构成这份个人刊物的视觉。页面为阅读留出空间，也为不同的表达保留音量。</p>
+        <h3>影像与致谢</h3>
+        <p>Bohemia 的黑胶封套与唱片标识为本站原创 SVG 设计。Queen 与《波西米亚狂想曲》是站名灵感；本站是独立个人博客。</p>
+        <p>示例文章封面来自 <a href="https://unsplash.com" target="_blank" rel="noopener noreferrer">Unsplash</a>，图片来源见项目 README。中文展示字体采用 Noto Serif SC，按 SIL Open Font License 使用。感谢每一位认真创作、自由分享的人。</p>
+      </div>
+    </div>
+  </div>
+</Base>

@@ -1,0 +1,43 @@
+{
+  "checked_on": "2026-11-11",
+  "site": "Bohemia",
+  "brand_inspiration": "Queen / Bohemian Rhapsody",
+  "columns": "Original example names retained; rock-band column names to be supplied by the owner.",
+  "type_check": {
+    "errors": 0,
+    "warnings": 0,
+    "hints": 0
+  },
+  "production_build": {
+    "status": "passed",
+    "html_pages": 12
+  },
+  "local_references": {
+    "checked": 354,
+    "missing": 0
+  },
+  "deployment_bases": [
+    "/",
+    "/blog/"
+  ],
+  "content": {
+    "published_example_posts": 6,
+    "example_notes": 4
+  },
+  "browser_checks": [
+    "Bohemia page title, header, footer and naming explanation",
+    "Original record-sleeve artwork",
+    "Light and dark themes with preference persistence",
+    "Full-body search for Queen",
+    "Mobile navigation",
+    "320px / 390px / 768px / 1440px layouts without horizontal overflow"
+  ],
+  "console_errors_observed": 0,
+  "previews": {
+    "desktop": "docs/preview-home.jpg",
+    "mobile": "docs/preview-mobile.jpg",
+    "tablet": "docs/preview-tablet.jpg",
+    "full_page": "Not refreshed: the browser capture API could not capture the full page; previous-brand image archived in .local/history."
+  },
+  "public_deployment": "Local delivery; GitHub Pages workflow prepared, not published."
+}

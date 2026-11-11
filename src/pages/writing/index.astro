@@ -1,0 +1,9 @@
+---
+import Base from '../../layouts/Base.astro';
+import PostCard from '../../components/PostCard.astro';
+import { getPosts, categories } from '../../lib/posts';
+const posts = await getPosts();
+---
+<Base title="文章" description="关于技术、设计、生活和日常思考的所有文章。">
+  <div class="wrap page-wrap"><header class="page-heading"><span class="eyebrow">WORDS ALONG THE WAY</span><h1>写下，才有回响<span>.</span></h1><p>一些经过整理的思考，和一些还在生长的答案。</p></header><div class="filter-bar"><div class="filter-buttons" role="group" aria-label="按分类筛选文章">{['全部', ...categories].map((category, index) => <button data-filter={category} aria-pressed={index === 0} class:list={{ selected: index === 0 }}>{category}<span>{category === '全部' ? posts.length : posts.filter(post => post.data.category === category).length}</span></button>)}</div><span data-filter-count class="filter-count">{posts.length} 篇文字</span></div><div class="writing-grid">{posts.map((post, index) => <div data-filter-item data-category={post.data.category}><PostCard post={post} index={index} /></div>)}</div><p class="end-note">— 写作未完，探索继续。 —</p></div>
+</Base>

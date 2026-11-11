@@ -1,0 +1,15 @@
+{
+  "title": "Bohemia",
+  "subtitle": "不同的声音，同一场共鸣。",
+  "description": "Bohemia，灵感来自 Queen 的《波西米亚狂想曲》。一座由摇滚乐队构想而成的个人博客，让不同专栏承载不同的声音。",
+  "author": "Bohemia",
+  "url": "",
+  "language": "zh-CN",
+  "github": "",
+  "email": "",
+  "hero": {
+    "line1": "让热爱，",
+    "line2": "自由发声。",
+    "intro": "名字来自 Queen 的《波西米亚狂想曲》。\n让不同的专栏像不同的乐队，写下各自的声音。"
+  }
+}

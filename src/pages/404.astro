@@ -1,0 +1,6 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import { withBase } from '../lib/posts';
+---
+<Base title="这支曲目还未录制" noindex><div class="wrap not-found"><span class="eyebrow">404 / TRACK NOT FOUND</span><div class="error-echo" aria-hidden="true">404<span>♫</span></div><h1>这一页，暂时没有回声。</h1><p>它可能已经搬走，或者还没来得及写下。<br />回到首页，换一支曲目继续读。</p><a class="button button-dark" href={withBase()}>回到首页 <Icon name="arrow" size={18} /></a></div></Base>

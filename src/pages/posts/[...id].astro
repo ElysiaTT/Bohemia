@@ -1,0 +1,26 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import site from '../../data/site.json';
+import { getPosts, postUrl, readingTime, formatDate, categoryUrl, withBase } from '../../lib/posts';
+export async function getStaticPaths() { return (await getPosts()).map(post => ({ params: { id: post.id }, props: { post } })); }
+const { post } = Astro.props;
+const { Content, headings } = await render(post);
+const posts = await getPosts();
+const others = posts.filter(item => item.id !== post.id).slice(0, 2);
+const canonical = new URL(postUrl(post), Astro.site || Astro.url.origin);
+const structuredData = { '@context': 'https://schema.org', '@type': 'BlogPosting', headline: post.data.title, description: post.data.description, datePublished: post.data.date.toISOString(), author: { '@type': 'Person', name: site.author }, mainEntityOfPage: canonical.href, ...(post.data.cover ? { image: new URL(withBase(post.data.cover), Astro.site || Astro.url.origin).href } : {}) };
+---
+<Base title={post.data.title} description={post.data.description} image={post.data.cover} article>
+  <script type="application/ld+json" set:html={JSON.stringify(structuredData).replace(/</g, '\\u003c')} />
+  <div class="reading-progress" aria-hidden="true"></div>
+  <article class="wrap article-page"><a class="article-back text-link" href={withBase('writing/')}><span aria-hidden="true">←</span> 回到文章</a><header class="article-heading"><div class="article-meta"><a class="category-label" href={categoryUrl(post.data.category)}>{post.data.category}</a><time datetime={post.data.date.toISOString()}>{formatDate(post.data.date)}</time><span>{readingTime(post)} 分钟阅读</span>{post.data.demo && <span class="demo-label">示例文章</span>}</div><h1>{post.data.title}</h1><p>{post.data.description}</p><div class="article-author"><span class="author-avatar" aria-hidden="true">B.</span><span>{site.author}<small>{site.subtitle}</small></span><button class="icon-button share-button" data-share><Icon name="copy" size={17} /><span>复制链接</span></button></div></header>{post.data.cover && <figure class="article-cover"><img src={withBase(post.data.cover)} alt={post.data.coverAlt || post.data.title} width="1200" height="640" fetchpriority="high" /></figure>}<div class="article-layout"><div class="article-content">{post.data.demo && <p class="demo-notice">这是用于展示阅读体验的示例文章，可替换为你的真实内容。</p>}<div class="prose"><Content /></div><div class="article-tags">{post.data.tags.map(tag => <button class="article-tag search-tag" data-search-term={tag}>#{tag}</button>)}</div><div class="article-end"><span aria-hidden="true">✳</span><p>感谢你读到这里。</p><span>每一次记录，都有自己的声音。</span></div><div class="related-posts"><span class="eyebrow">KEEP EXPLORING</span><h2>接着读一点</h2>{others.map(item => <a href={postUrl(item)}><span><small>{item.data.category}</small>{item.data.title}</span><Icon name="arrow" size={20} /></a>)}</div></div><aside class="article-sidebar"><nav class="toc" aria-label="文章目录"><span class="eyebrow">ON THIS PAGE</span><h2>文章目录</h2>{headings.filter(heading => heading.depth <= 3).map(heading => <a class:list={{ 'toc-sub': heading.depth === 3 }} href={`#${heading.slug}`}>{heading.text}</a>)}<a class="toc-top" href="#top">回到顶部 ↑</a></nav></aside></div></article>
+  <script>
+    document.querySelectorAll<HTMLButtonElement>('[data-search-term]').forEach(button => button.addEventListener('click', () => {
+      document.querySelector<HTMLButtonElement>('.search-toggle')?.click();
+      const input = document.querySelector<HTMLInputElement>('#search-input');
+      if (input) { input.value = button.dataset.searchTerm || ''; input.dispatchEvent(new Event('input')); }
+    }));
+  </script>
+</Base>
