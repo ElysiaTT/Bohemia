@@ -5,6 +5,7 @@ import type { ArticleDraft, ArticleValues, PublishedArticle } from '../lib/studi
 import { StudioGitHub } from '../lib/studio-github';
 import type { RepositoryFile, StudioRepository } from '../lib/studio-github';
 import { readDrafts, storeDraft } from '../lib/studio-storage';
+import { articleHeadingDepth } from '../lib/article-headings';
 
 type Configuration = { repository: StudioRepository; base: string; index: string; columns: Array<{ slug: string; title: string; side: string }> };
 const configuration = JSON.parse(document.querySelector('#studio-config')!.textContent!) as Configuration;
@@ -142,6 +143,11 @@ function renderPreview() {
   if (!values.body.trim()) { previewBody.replaceChildren(makeText('p', '你的文字，会在这里慢慢成形。', 'studio-preview-empty')); return; }
   const html = marked.parse(values.body, { async: false, gfm: true });
   previewBody.innerHTML = DOMPurify.sanitize(html, { USE_PROFILES: { html: true }, FORBID_TAGS: ['style', 'form', 'input', 'button', 'textarea', 'select', 'iframe', 'object', 'embed'], FORBID_ATTR: ['style', 'srcset', 'id', 'name'], SANITIZE_NAMED_PROPS: true });
+  if (previewBody.querySelector('h1')) previewBody.querySelectorAll('h1,h2,h3,h4,h5,h6').forEach(heading => {
+    const normalized = document.createElement(`h${articleHeadingDepth(Number(heading.tagName[1]), true)}`);
+    normalized.append(...heading.childNodes);
+    heading.replaceWith(normalized);
+  });
   previewBody.querySelectorAll<HTMLAnchorElement>('a').forEach(link => { link.target = '_blank'; link.rel = 'noopener noreferrer'; });
   previewBody.querySelectorAll<HTMLImageElement>('img').forEach(image => { const source = image.getAttribute('src') || ''; if (source.startsWith('images/')) image.src = `${configuration.base}${source}`; image.loading = 'lazy'; });
 }

@@ -2,6 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { articlePath, decodeBase64, emptyArticle, isArticlePath, parseArticle, serializeArticle, validateArticle } from '../src/lib/studio-content.ts';
 import { RepositoryConflict, StudioGitHub } from '../src/lib/studio-github.ts';
+import { createSatteriMarkdownProcessor } from '@astrojs/markdown-satteri';
+import { articleHeadings } from '../scripts/article-headings.ts';
 
 const columns = new Set(['wish-you-were-real']);
 const repository = { owner: 'ElysiaTT', repo: 'Bohemia', branch: 'main' };
@@ -9,6 +11,27 @@ const values = () => ({ ...emptyArticle(), slug: 'a-new-song', title: '中文标
 const draft = () => ({ id: 'local:test', values: values(), savedAt: '2026-11-11T00:00:00Z' });
 const encoded = text => Buffer.from(text).toString('base64');
 const response = (data, status = 200) => new Response(JSON.stringify(data), { status, headers: { 'Content-Type': 'application/json' } });
+
+test('Markdown document titles render below the page title with matching table of contents', async () => {
+  const renderer = await createSatteriMarkdownProcessor({ hastPlugins: [articleHeadings()], syntaxHighlight: false });
+  const source = '# Document title\n\n## Section\n\n### Detail\n\n###### Deepest\n\n```md\n# A code sample stays unchanged\n```';
+  const rendered = await renderer.render(source);
+  assert.doesNotMatch(rendered.code, /<h1\b/);
+  assert.match(rendered.code, /<h2 id="document-title">Document title<\/h2>/);
+  assert.match(rendered.code, /<h3 id="section">Section<\/h3>/);
+  assert.match(rendered.code, /<h4 id="detail">Detail<\/h4>/);
+  assert.match(rendered.code, /<h6 id="deepest">Deepest<\/h6>/);
+  assert.match(rendered.code, /# A code sample stays unchanged/);
+  assert.deepEqual(rendered.metadata.headings.map(({ depth }) => depth), [2, 3, 4, 6]);
+});
+
+test('Existing Markdown without a document title keeps its heading levels', async () => {
+  const renderer = await createSatteriMarkdownProcessor({ hastPlugins: [articleHeadings()], syntaxHighlight: false });
+  const rendered = await renderer.render('## Section\n\n### Detail\n\n```md\n# Only a code example\n```');
+  assert.match(rendered.code, /<h2 id="section">Section<\/h2>/);
+  assert.match(rendered.code, /<h3 id="detail">Detail<\/h3>/);
+  assert.deepEqual(rendered.metadata.headings.map(({ depth }) => depth), [2, 3]);
+});
 
 test('Chinese Markdown and metadata round-trip without changing article flags', () => {
   const article = { ...values(), draft: true, demo: true, featured: true };
