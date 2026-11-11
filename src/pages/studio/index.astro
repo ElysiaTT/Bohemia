@@ -1,0 +1,56 @@
+---
+import Base from '../../layouts/Base.astro';
+import { withBase } from '../../lib/posts';
+import { articleCategories } from '../../lib/studio-content';
+import { recordSides } from '../../lib/record';
+import repository from '../../data/studio.json';
+import '../../styles/studio.css';
+const configuration = { repository, base: withBase(), index: withBase('studio/posts.json'), columns: recordSides.flatMap(side => side.tracks.map(track => ({ slug: track.slug, title: track.title, side: side.side }))) };
+const credentialUrl = `https://github.com/settings/personal-access-tokens/new?${new URLSearchParams({ name: 'Bohemia writing room', description: 'Publish articles to Bohemia', target_name: repository.owner, expires_in: '30', contents: 'write' })}`;
+---
+<Base title="写作台" description="在 Bohemia 写作、预览并发布你的下一篇文章。" noindex>
+  <div class="studio-page wrap" id="writing-room" data-view="split">
+    <header class="studio-heading">
+      <div><p class="eyebrow">THE WRITING ROOM <span aria-hidden="true">/</span> BOHEMIA</p><h1>让新的声音，落在纸上<span>。</span></h1><p>写一篇新的，或让旧文字继续生长。</p></div>
+      <button type="button" class="studio-connect-button" id="studio-connect"><span class="studio-connection-dot" aria-hidden="true"></span><span id="studio-connection-label">连接 GitHub</span><span aria-hidden="true">↗</span></button>
+    </header>
+    <noscript><p class="studio-notice">写作台需要开启 JavaScript。你也可以<a href={`https://github.com/${repository.owner}/${repository.repo}/tree/${repository.branch}/src/content/posts`}>在 GitHub 编辑文章</a>。</p></noscript>
+    <div class="studio-notice" id="studio-message" role="status" aria-live="polite" hidden><p id="studio-message-text"></p><div id="studio-message-links"></div></div>
+    <div class="studio-workspace">
+      <aside class="studio-library" aria-label="文章库">
+        <button type="button" class="button button-dark studio-new" id="studio-new"><span aria-hidden="true">＋</span> 新建文章</button>
+        <div class="studio-library-tabs" role="group" aria-label="选择文章来源"><button type="button" data-library="posts" aria-pressed="true">博客文章 <span id="studio-post-count">—</span></button><button type="button" data-library="drafts" aria-pressed="false">本机草稿 <span id="studio-draft-count">0</span></button></div>
+        <label class="studio-library-search"><span class="studio-sr-only">搜索写作台文章</span><input type="search" id="studio-library-search" placeholder="找一段写过的文字…" /></label>
+        <div id="studio-library-list" class="studio-library-list" aria-live="polite"><p class="studio-library-empty">正在载入文章…</p></div>
+        <p class="studio-library-footnote" id="studio-library-note">未连接时可编辑已公开文章；连接后也能载入仓库草稿。</p>
+        <a class="text-link studio-return" href={withBase()}>回到博客 <span aria-hidden="true">↗</span></a>
+      </aside>
+      <section class="studio-desk" aria-label="文章编辑器">
+        <div class="studio-actions"><div class="studio-save-state"><span class="eyebrow">ON THE DESK</span><p id="studio-save-state" role="status">新的一页，等你落笔。</p></div><div class="studio-action-buttons"><button type="button" class="studio-secondary" id="studio-save">保存草稿</button><button type="button" class="studio-secondary" id="studio-export">导出 Markdown</button><button type="button" class="studio-primary" id="studio-publish">发布到博客 <span aria-hidden="true">↗</span></button></div></div>
+        <form id="studio-form" novalidate>
+          <fieldset class="studio-properties" id="studio-fields"><legend class="studio-sr-only">文章信息与正文</legend>
+            <label class="studio-field studio-full studio-title-field">文章标题<input id="studio-title" name="title" placeholder="给这段旋律，一个名字。" maxlength="180" required /></label>
+            <label class="studio-field">文章地址<input name="slug" id="studio-slug" placeholder="my-first-song" spellcheck="false" autocomplete="off" required /><small id="studio-slug-hint">小写英文、数字和短横线；发布后地址固定。</small></label>
+            <label class="studio-field">发布日期<input type="date" name="date" id="studio-date" required /></label>
+            <label class="studio-field">文章分类<select name="category" id="studio-category">{articleCategories.map(category => <option value={category}>{category}</option>)}</select></label>
+            <label class="studio-field">所属专栏<select name="column" id="studio-column"><option value="">暂不收入专栏</option>{recordSides.map(side => <optgroup label={`${side.side} · ${side.name}`}>{side.tracks.map(track => <option value={track.slug}>{track.title}</option>)}</optgroup>)}</select></label>
+            <label class="studio-field studio-full">文章摘要<textarea name="description" id="studio-description" rows="2" maxlength="500" placeholder="用一两句话，告诉读者这篇文章写了什么。" required></textarea></label>
+            <div class="studio-cover-picker studio-full"><div class="studio-cover-thumbnail" aria-hidden="true"><img id="studio-cover-thumbnail" alt="" hidden /><span id="studio-cover-placeholder">B.<i>THE NEXT TRACK</i></span></div><div><div class="studio-cover-heading"><label for="studio-cover">文章封面</label><label class="studio-upload" for="studio-cover-file">选择图片 <span aria-hidden="true">↗</span></label><input type="file" id="studio-cover-file" class="studio-sr-only" accept="image/jpeg,image/png,image/webp,image/gif" aria-label="选择封面图片" /></div><input name="cover" id="studio-cover" placeholder="images/your-cover.webp" spellcheck="false" aria-label="封面图片路径" /><small>支持 JPG、PNG、WebP、GIF，最多 5 MB。发布时随文章一起上传。</small></div></div>
+            <details class="studio-options studio-full"><summary>标签、图片说明与发布选项</summary><div class="studio-options-grid"><label class="studio-field">标签<input name="tags" id="studio-tags" placeholder="用逗号分隔，如：摄影，日常" /></label><label class="studio-field">封面说明<input name="coverAlt" id="studio-cover-alt" placeholder="描述这张图片，方便读者理解。" /></label><label class="studio-check"><input type="checkbox" name="draft" id="studio-repo-draft" /> 仅作为仓库草稿，不显示在博客</label><p class="studio-options-note">本机草稿只保存在当前浏览器。提交到公开仓库的草稿文件，在 GitHub 中仍可查看。</p><label class="studio-check"><input type="checkbox" name="demo" id="studio-demo" /> 这是示例文章，不计入正式专栏</label><label class="studio-check"><input type="checkbox" name="featured" id="studio-featured" /> 保留精选文章标记</label></div></details>
+            <div class="studio-body-section studio-full">
+              <div class="studio-body-heading"><div><span class="eyebrow">THE WORDS</span><h2>正文<span>。</span></h2></div><div class="studio-view-controls" role="group" aria-label="正文视图"><button type="button" data-view="edit" aria-pressed="false">编辑</button><button type="button" data-view="split" aria-pressed="true">并排预览</button><button type="button" data-view="preview" aria-pressed="false">阅读预览</button></div></div>
+              <div class="studio-writing-panes">
+                <div class="studio-source-pane"><div class="studio-format-bar" role="group" aria-label="插入正文格式"><button type="button" data-format="heading" title="二级标题">H2</button><button type="button" data-format="bold" title="加粗"><strong>B</strong></button><button type="button" data-format="quote" title="引用">“ ”</button><button type="button" data-format="link">链接</button><button type="button" data-format="image">图片</button><button type="button" data-format="code">代码</button><span>MARKDOWN</span></div><label class="studio-sr-only" for="studio-body">文章正文</label><textarea id="studio-body" name="body" placeholder="从一个想法、一段见闻，或一首歌开始。&#10;&#10;## 写下第一个小标题&#10;&#10;这里可以写正文。支持 Markdown，也可以使用上方按钮插入格式。" spellcheck="false" required></textarea><div class="studio-body-bottom"><span>文字会自动保存在当前浏览器。</span><span id="studio-word-count">0 字</span></div></div>
+                <article class="studio-preview" aria-label="文章排版预览"><p class="eyebrow studio-preview-label">A FIRST LISTEN / 排版预览</p><img id="studio-preview-cover" class="studio-preview-cover" alt="" hidden /><p class="studio-preview-meta" id="studio-preview-meta"></p><h2 id="studio-preview-title">未命名的作品</h2><p class="studio-preview-description" id="studio-preview-description"></p><div class="prose" id="studio-preview-body"><p class="studio-preview-empty">你的文字，会在这里慢慢成形。</p></div></article>
+              </div>
+            </div>
+          </fieldset>
+        </form>
+        <div class="studio-desk-footer"><span>BOHEMIA <span aria-hidden="true">·</span> WRITE IN YOUR OWN KEY</span><button type="button" class="text-link" id="studio-reload" hidden>载入仓库最新版 <span aria-hidden="true">↻</span></button></div>
+      </section>
+    </div>
+  </div>
+  <dialog class="studio-auth" id="studio-auth" aria-labelledby="studio-auth-title"><div class="studio-auth-top"><span class="eyebrow">BACKSTAGE / GITHUB</span><button type="button" class="icon-button" id="studio-auth-close" aria-label="关闭 GitHub 连接">×</button></div><h2 id="studio-auth-title">让文字，走上舞台<span>。</span></h2><p>连接你有写入权限的 GitHub 身份，即可把文章发布到 <strong>ElysiaTT / Bohemia</strong>。</p><form id="studio-auth-form"><label class="studio-field">GitHub 发布凭据<input type="password" id="studio-token" autocomplete="off" spellcheck="false" placeholder="粘贴 Fine-grained personal access token" maxlength="512" required /></label><p class="studio-auth-note">凭据只用于当前页面，刷新或断开后需重新连接。草稿中不会保存凭据。</p><button type="submit" class="studio-primary" id="studio-auth-submit">连接 GitHub <span aria-hidden="true">↗</span></button></form><p id="studio-auth-status" role="status"></p><details><summary>首次连接：创建发布凭据</summary><ol><li><a href={credentialUrl} target="_blank" rel="noopener noreferrer">在 GitHub 创建发布凭据 ↗</a>，名称和权限已预填。</li><li>在 Repository access 选择 <strong>Only select repositories → Bohemia</strong>。</li><li>确认 Contents 为 <strong>Read and write</strong>，创建后将凭据粘贴到上方。</li></ol><a class="text-link" href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens" target="_blank" rel="noopener noreferrer">GitHub 官方说明 ↗</a></details><div class="studio-auth-connected" id="studio-auth-connected" hidden><p>已连接 Bohemia，可以编辑文章及载入仓库草稿。</p><button type="button" class="studio-secondary" id="studio-sync">同步文章列表</button><button type="button" class="studio-secondary" id="studio-disconnect">断开连接</button></div></dialog>
+  <script type="application/json" id="studio-config" set:html={JSON.stringify(configuration).replaceAll('<', '\u003c')} />
+  <script>import '../../scripts/studio';</script>
+</Base>

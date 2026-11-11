@@ -1,0 +1,75 @@
+{
+  "checked_on": "2026-11-11",
+  "feature": "Bohemia browser writing room with direct GitHub publishing",
+  "framework": "Astro 7.3.8",
+  "type_check": {
+    "errors": 0,
+    "warnings": 0,
+    "hints": 0
+  },
+  "unit_tests": {
+    "passed": 9,
+    "failed": 0
+  },
+  "production_build": {
+    "status": "passed",
+    "html_pages": 13,
+    "local_references": 387,
+    "deployment_bases": [
+      "/",
+      "/Bohemia/"
+    ]
+  },
+  "dependency_audit": {
+    "vulnerabilities": 0
+  },
+  "real_github_api": {
+    "status": "passed",
+    "branch": "codex/studio-api-check-1794370238781",
+    "source_articles": 6,
+    "commit_sha": "fd0c8468543901bbcae77aa0a6bc52ee0a222159",
+    "readback_matches": true,
+    "article_text_unchanged": true,
+    "atomic_cover_verified": true,
+    "main_unchanged": true,
+    "public_articles_created": 0,
+    "temporary_branch_removed": true
+  },
+  "browser_checks": [
+    "Existing published articles load with body, metadata and fixed URL",
+    "New article has empty fields and demo=false",
+    "All 14 columns are available in the selector",
+    "Text edits automatically save and survive page reload",
+    "Selected cover decodes, saves to IndexedDB and survives reload",
+    "Markdown toolbar inserts formatting and preview renders it",
+    "Preview strips script tags and javascript links; no script executes",
+    "Repository draft option changes the publish action label",
+    "Empty article is rejected before authentication or repository writes",
+    "Invalid GitHub credential returns a readable 401 message and clears the credential field",
+    "Markdown export produces a real UTF-8 file",
+    "Article edit link opens the correct article in the writing room",
+    "1440px desktop, 768px tablet, 390px and 320px mobile have no horizontal overflow",
+    "Mobile switches between editing and reading preview",
+    "Dark theme preserves article contents",
+    "Production preview has no development runtime and no new browser console errors",
+    "Homepage Side A/B and Now Playing remain synchronized",
+    "Article code blocks, copy controls and table of contents remain available"
+  ],
+  "content": {
+    "public_articles": 6,
+    "public_articles_created": 0,
+    "repository_drafts_in_public_snapshot": 0
+  },
+  "credentials": "Kept only in the page client instance; not written to IndexedDB, localStorage, sessionStorage, URLs or repository source",
+  "storage": "IndexedDB drafts are local to the browser; GitHub commits sync across devices after connection",
+  "screenshots": [
+    "studio-desktop.jpg",
+    "studio-writing.jpg",
+    "studio-mobile.jpg",
+    "studio-connect.jpg"
+  ],
+  "public_deployment": {
+    "target": "https://elysiatt.github.io/Bohemia/studio/",
+    "workflow_runs": "https://github.com/ElysiaTT/Bohemia/actions"
+  }
+}

@@ -31,6 +31,8 @@ jobs:
         run: npm ci
       - name: Check content and types
         run: npm run check
+      - name: Test authoring and publishing
+        run: npm test
       - name: Detect GitHub Pages configuration
         id: pages_status
         env:

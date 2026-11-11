@@ -16,6 +16,8 @@
 
 [手机专栏排版](docs/columns-mobile.jpg) · [平板深色排版](docs/columns-tablet-dark.jpg)
 
+[网页写作台](https://elysiatt.github.io/Bohemia/studio/) · [编辑器预览](docs/studio-writing.jpg) · [手机编辑器](docs/studio-mobile.jpg)
+
 ## 本地运行
 
 推荐 Node.js 24 LTS。已在本机 Node.js 22.14.0 上通过构建与功能检查；当前字体工具的间接依赖会提示 Node.js 22.19.0 的引擎要求，安装新环境时请优先使用 Node.js 24。
@@ -30,6 +32,7 @@ npm run dev
 
 ```powershell
 npm run check    # 内容与类型检查
+npm test         # 文章序列化、发布、并发冲突与路径验证
 npm run build    # 输出静态网站到 dist/
 npm run verify   # 检查构建结果的链接、锚点、搜索、RSS 与站点地图
 npm run preview  # 预览已经构建的网站
@@ -63,6 +66,24 @@ npm run preview  # 预览已经构建的网站
 个人介绍位于 `src/pages/about/index.astro`，碎片位于 `src/data/notes.json`，配色与布局位于 `src/styles/global.css`。
 
 ## 写第一篇文章
+
+### 直接在网页写作与发布
+
+打开网站页脚的「写作台」，或文章正文后的「在写作台编辑此文」。可以新建文章、编辑已公开内容、选择专栏和分类、上传封面，并使用 Markdown 格式按钮及实时预览。电脑支持并排编辑，手机可以切换编辑与阅读预览。
+
+文字与选好的封面会自动保存在当前浏览器的 IndexedDB 中；刷新会恢复上次草稿。也可以点击「保存草稿」、按 Ctrl / Cmd + S，或导出 Markdown。浏览器草稿不会同步到其他设备，清理站点数据也会清除它们。
+
+首次发布时点击「连接 GitHub」，按弹窗里的链接创建 Fine-grained personal access token：Repository access 只选择 **ElysiaTT/Bohemia**，仓库权限 **Contents → Read and write**。粘贴到写作台后即可发布。凭据仅在当前页面内存中使用，不保存到浏览器存储、草稿、网址或仓库；刷新页面后需要重新连接。
+
+连接后，左侧会同步仓库里的文章与草稿。点击「发布到博客」会将文章和新封面作为同一次 Git 提交写入 `main`，随后由 GitHub Actions 部署，并更新首页专栏、搜索与 RSS。页面会提供本次提交及发布进度链接。勾选「仅作为仓库草稿」则保存 `draft: true`，不会显示在博客中；仓库是公开的，草稿文件仍可在 GitHub 查看。
+
+已有文章的地址固定；编辑时会检查文件版本，保留其他 frontmatter 字段与注释。若仓库文章或分支已被更新，本次提交会停止，本机文字保留。点击「载入仓库最新版」会先另存旧的本机版本，方便手工合并。
+
+图片支持 JPG、PNG、WebP、GIF，最多 5 MB，发布时放入 `public/images/uploads/`。Markdown 导出只下载文字，尚未发布的新封面仍保存在本机草稿里。写作台的阅读预览会过滤可执行 HTML，代码高亮以正式文章页为准。
+
+仓库设置位于 `src/data/studio.json`。写作台不会把未发布文章打包到公开的文章快照、搜索或 RSS 中，也不列入站点地图。
+
+网页发布会更新 GitHub 仓库。本地 `D:\study\blog_web` 不会自动同步；继续在本地编辑前先执行 `git pull --ff-only`。
 
 ### 将文章收入专栏
 

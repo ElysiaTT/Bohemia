@@ -89,6 +89,17 @@ for (const side of record) {
 }
 const backPanel = home.match(/<section[^>]*data-record-panel="side-b"[^>]*>/)?.[0] || '';
 if (!backPanel.includes('inert') || !backPanel.includes('aria-hidden="true"')) errors.push('Inactive Side B must be inert and hidden from assistive technology');
+const studio = readFileSync(resolve(root, 'studio/index.html'), 'utf8');
+if (!studio.includes('noindex, follow') || !studio.includes('id="studio-form"') || !studio.includes('id="studio-auth"')) errors.push('Writing room must include the editor, authentication dialog and noindex directive');
+if (!home.includes(`${base}/studio/`)) errors.push('Home must link to the writing room');
+const studioPosts = JSON.parse(readFileSync(resolve(root, 'studio/posts.json'), 'utf8'));
+if (studioPosts.length !== index.length) errors.push('Writing room snapshot must include exactly the public posts');
+for (const article of studioPosts) {
+  if (article.values.draft || !article.values.body || !/^[a-f0-9]{40}$/.test(article.sha) || !article.path.startsWith('src/content/posts/')) errors.push('Invalid or private article in public writing room snapshot');
+  if (!index.some(post => post.title === article.values.title)) errors.push('Writing room exposed a non-public article');
+}
+const sitemap = readFileSync(resolve(root, 'sitemap-0.xml'), 'utf8');
+if (/\/studio(?:\/|<)/.test(sitemap)) errors.push('Writing room must not appear in the public sitemap');
 if (index.some(post => post.title.includes('DRAFT_VISIBILITY_CHECK'))) errors.push('Draft leaked into the search index');
 if (rss.includes('DRAFT_VISIBILITY_CHECK')) errors.push('Draft leaked into RSS');
 if (existsSync(resolve(root, 'posts/draft-visibility-check/index.html'))) errors.push('Draft page was generated');

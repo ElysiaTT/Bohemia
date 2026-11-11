@@ -8,6 +8,7 @@
     "build": "astro build",
     "preview": "astro preview --host 127.0.0.1",
     "check": "astro check",
+    "test": "node --experimental-strip-types --test tests/studio.test.mjs",
     "verify": "node scripts/verify-build.mjs",
     "new": "node scripts/new-post.mjs",
     "brand": "node scripts/render-brand.mjs"
@@ -15,11 +16,16 @@
   "dependencies": {
     "@astrojs/rss": "4.0.19",
     "@astrojs/sitemap": "3.7.4",
-    "astro": "6.4.8"
+    "astro": "7.3.8",
+    "dompurify": "3.4.17",
+    "marked": "18.2.0",
+    "yaml": "2.9.1"
   },
   "devDependencies": {
     "@astrojs/check": "0.9.12",
     "typescript": "~5.9.3"
   },
-  "engines": { "node": ">=22.12.0" }
+  "engines": {
+    "node": ">=22.12.0"
+  }
 }

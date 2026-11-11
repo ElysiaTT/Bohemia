@@ -67,7 +67,7 @@ const active = (path: string) => Astro.url.pathname.startsWith(withBase(path)) |
     <main id="main"><slot /></main>
     <footer class="site-footer wrap">
       <div class="footer-top"><a href={withBase()} class="footer-brand">{site.title}<span>.</span></a><p>{site.subtitle}</p><a class="back-top" href="#top" aria-label="回到页面顶部">回到顶部 <span aria-hidden="true">↑</span></a></div>
-      <div class="footer-bottom"><span>© {new Date().getFullYear()} {site.author} <span class="footer-dot">·</span> Written in my own key.</span><div>{site.github && <a href={site.github} target="_blank" rel="noopener noreferrer">GitHub <Icon name="diagonal" size={12} /></a>}<a href={withBase('rss.xml')}>RSS <Icon name="rss" size={13} /></a><a href={withBase('about/#colophon')}>关于本站 <Icon name="diagonal" size={12} /></a></div></div>
+      <div class="footer-bottom"><span>© {new Date().getFullYear()} {site.author} <span class="footer-dot">·</span> Written in my own key.</span><div>{site.github && <a href={site.github} target="_blank" rel="noopener noreferrer">GitHub <Icon name="diagonal" size={12} /></a>}<a href={withBase('rss.xml')}>RSS <Icon name="rss" size={13} /></a><a href={withBase('studio/')}>写作台 <Icon name="diagonal" size={12} /></a><a href={withBase('about/#colophon')}>关于本站 <Icon name="diagonal" size={12} /></a></div></div>
     </footer>
     <dialog class="search-dialog" id="search-dialog" aria-labelledby="search-title" data-index={withBase('search.json')}>
       <div class="search-dialog-top"><span class="eyebrow" id="search-title">FIND SOMETHING GOOD</span><button class="icon-button search-close" aria-label="关闭搜索"><Icon name="close" /></button></div>

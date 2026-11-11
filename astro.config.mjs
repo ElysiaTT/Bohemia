@@ -9,7 +9,8 @@ export default defineConfig({
   base: process.env.SITE_BASE || '/',
   trailingSlash: 'always',
   output: 'static',
-  integrations: [sitemap()],
+  compressHTML: true,
+  integrations: [sitemap({ filter: page => !/\/studio(?:\/|$)/.test(new URL(page).pathname) })],
   markdown: {
     shikiConfig: {
       themes: { light: 'github-light', dark: 'github-dark' },
