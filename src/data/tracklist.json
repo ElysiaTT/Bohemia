@@ -1,0 +1,104 @@
+[
+  {
+    "id": "side-a",
+    "side": "SIDE A",
+    "name": "THE SIGNAL",
+    "heading": "理性的噪声",
+    "intro": "机器学习、基础模型、机器人与闭环系统。把模型如何工作、为何失效、如何走进现实写下来。",
+    "tracks": [
+      {
+        "slug": "comfortably-uncertain",
+        "title": "Comfortably Uncertain",
+        "note": "机器学习基础、概率、不确定性、泛化与校准。",
+        "inspiration": "Pink Floyd · Comfortably Numb"
+      },
+      {
+        "slug": "wish-you-were-real",
+        "title": "Wish You Were Real",
+        "note": "VLA 与具身智能：从模拟环境、行为学习到真实机器人。",
+        "inspiration": "Pink Floyd · Wish You Were Here"
+      },
+      {
+        "slug": "the-dark-side-of-the-model",
+        "title": "The Dark Side of the Model",
+        "note": "模型失败案例、评测陷阱、偏差与值得追问的研究问题。",
+        "inspiration": "Pink Floyd · The Dark Side of the Moon"
+      },
+      {
+        "slug": "while-my-model-gently-dreams",
+        "title": "While My Model Gently Dreams",
+        "note": "世界模型、生成模型，以及机器如何学习想象未来。",
+        "inspiration": "The Beatles · While My Guitar Gently Weeps"
+      },
+      {
+        "slug": "stairway-to-latent-space",
+        "title": "Stairway to Latent Space",
+        "note": "表示学习、Embedding、多模态与潜在空间的直觉。",
+        "inspiration": "Led Zeppelin · Stairway to Heaven"
+      },
+      {
+        "slug": "a-kind-of-emergence",
+        "title": "A Kind of Emergence",
+        "note": "基础模型、规模化训练与涌现能力；替代 Silicon Rhapsody。",
+        "inspiration": "Queen · A Kind of Magic"
+      },
+      {
+        "slug": "highway-to-inference",
+        "title": "Highway to Inference",
+        "note": "模型推理、工程部署、延迟、吞吐量与性能优化。",
+        "inspiration": "AC/DC · Highway to Hell"
+      },
+      {
+        "slug": "the-loop-must-go-on",
+        "title": "The Loop Must Go On",
+        "note": "强化学习、Agent Loop、Harness 与反馈驱动的迭代。",
+        "inspiration": "Queen · The Show Must Go On"
+      }
+    ]
+  },
+  {
+    "id": "side-b",
+    "side": "SIDE B",
+    "name": "THE AFTERGLOW",
+    "heading": "感性的回响",
+    "intro": "摇滚、吉他、摄影、日常与旅途。重要的不是写得多完整，而是把值得记住的片刻留下。",
+    "tracks": [
+      {
+        "slug": "39-frames-later",
+        "title": "39 Frames Later",
+        "note": "摄影、镜头、光线与被快门留住的瞬间。",
+        "inspiration": "Queen · '39"
+      },
+      {
+        "slug": "art-of-becoming",
+        "title": "Art of Becoming",
+        "note": "关于成长、选择、阅读，以及正在成为的自己。",
+        "inspiration": "X JAPAN · ART OF LIFE"
+      },
+      {
+        "slug": "after-the-encore",
+        "title": "After the Encore",
+        "note": "X JAPAN、Queen、日本摇滚、专辑与演出随笔。",
+        "inspiration": "Live music · Encore"
+      },
+      {
+        "slug": "forever-in-distortion",
+        "title": "Forever in Distortion",
+        "note": "电吉他、练习、音色与自己的音乐创作。",
+        "inspiration": "X JAPAN · Forever Love × Guitar Distortion"
+      },
+      {
+        "slug": "these-are-the-days",
+        "title": "These Are the Days",
+        "note": "日常碎片、平凡小事和不想遗忘的时刻。",
+        "inspiration": "Queen · These Are the Days of Our Lives"
+      },
+      {
+        "slug": "across-two-worlds",
+        "title": "Across Two Worlds",
+        "note": "城市、旅行、异乡与不同文化之间的观察。",
+        "inspiration": "Queen · Teo Torriatte (意象)"
+      }
+    ]
+  }
+]

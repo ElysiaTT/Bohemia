@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
 import PostCard from '../components/PostCard.astro';
 import site from '../data/site.json';
+import tracklist from '../data/tracklist.json';
 import notes from '../data/notes.json';
 import { getPosts, postUrl, readingTime, formatDate, withBase, categories, categoryUrl } from '../lib/posts';
 const posts = await getPosts();
@@ -21,6 +22,24 @@ const latest = posts.filter(post => post.id !== featured?.id).slice(0, 4);
     <figure class="hero-visual record-visual"><div class="hero-photo"><img src={withBase('images/bohemia-cover.svg')} alt="Bohemia 原创唱片封套：酒红色圆环、黑胶纹路和交织的声波" width="1000" height="800" fetchpriority="high" /></div><figcaption><span>不同的声音，在同一个舞台相遇。</span><span class="mono">SIDE A — BOHEMIA</span></figcaption></figure>
   </section>
   <div class="journal-divider wrap"><span><span class="little-spark" aria-hidden="true">✳</span> 每一份热爱，都有自己的声部。</span><span class="eyebrow">DIFFERENT VOICES. ONE STAGE. <span aria-hidden="true">↘</span></span></div>
+  <section class="tracklist wrap" aria-labelledby="tracklist-heading">
+    <header class="tracklist-heading">
+      <div><span class="eyebrow">THE RECORD / TRACKLIST</span><h2 id="tracklist-heading">两面唱片，写给不同的世界<span class="section-period">.</span></h2></div>
+      <p>Bohemia 是整张唱片。每个标题是一条持续更新的写作线索，下面的小字说明它记录什么。</p>
+    </header>
+    <div class="record-sides">
+      {tracklist.map((side) => <section class="record-side" id={side.id} aria-label={side.side}>
+        <div class="record-side-heading"><div><span class="eyebrow">{side.side} · {side.name}</span><h3>{side.heading}</h3></div><span class="record-side-count">{String(side.tracks.length).padStart(2,'0')} TRACKS</span></div>
+        <p class="record-side-intro">{side.intro}</p>
+        <ol class="track-rows">
+          {side.tracks.map((track, index) => <li class="track-row">
+            <span class="track-number">{String(index + 1).padStart(2, '0')}</span>
+            <div class="track-copy"><h4>{track.title}</h4><p>{track.note}</p><span class="track-inspiration">INSPIRED BY {track.inspiration}</span></div>
+          </li>)}
+        </ol>
+      </section>)}
+    </div>
+  </section>
   <div class="journal-layout wrap" id="latest">
     <section class="journal-main">
       <div class="section-heading"><div><span class="eyebrow">THE JOURNAL</span><h2>最近写下<span class="section-period">.</span></h2></div><a class="text-link" href={withBase('writing/')}>全部文章 <Icon name="arrow" size={16} /></a></div>

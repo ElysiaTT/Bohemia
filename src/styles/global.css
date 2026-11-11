@@ -32,3 +32,26 @@
 .about-hero-image img{filter:none;object-position:50% 45%}
 .about-hero-image>span{background:#27221fc9;padding:8px 10px}
 @media(max-width:600px){.record-visual .hero-photo{aspect-ratio:1.25;box-shadow:5px 5px 0 var(--line)}.record-visual figcaption{margin-top:17px}}
+
+/* Side A / Side B editorial tracklist: two record sleeves, one journal. */
+.tracklist{padding-top:52px;padding-bottom:59px}
+.tracklist-heading{display:flex;justify-content:space-between;align-items:end;gap:28px;margin-bottom:26px}
+.tracklist-heading h2{font-family:var(--serif);font-size:28px;font-weight:500;line-height:1.6;margin-top:9px}
+.tracklist-heading>p{max-width:350px;color:var(--muted);font-size:11px;line-height:1.9}
+.record-sides{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.record-side{border:1px solid var(--line);border-radius:3px;padding:29px 29px 15px;background:var(--card);min-width:0}
+.record-side:last-child{background:var(--surface)}
+.record-side-heading{display:flex;align-items:end;justify-content:space-between;gap:12px}
+.record-side-heading h3{font-family:var(--serif);font-weight:500;font-size:27px;margin-top:8px}
+.record-side-count{font-family:var(--mono);font-size:9px;color:var(--faint);white-space:nowrap}
+.record-side-intro{color:var(--muted);font-size:11px;line-height:1.9;margin-top:16px;padding-bottom:23px;border-bottom:1px solid var(--line)}
+.track-rows{list-style:none;padding:0;margin:0}
+.track-row{display:flex;gap:17px;padding:17px 0;border-bottom:1px solid var(--line)}
+.track-row:last-child{border-bottom:none}
+.track-number{flex:0 0 23px;font-family:var(--mono);color:var(--accent);font-size:10px;margin-top:5px}
+.track-copy{min-width:0}
+.track-copy h4{font:italic 500 19px/1.5 Georgia,'Times New Roman',serif;color:var(--ink);margin:0}
+.track-copy p{font-size:11px;line-height:1.8;color:var(--muted);margin-top:5px}
+.track-inspiration{display:block;font-family:var(--mono);font-size:8px;line-height:1.6;letter-spacing:.35px;color:var(--faint);margin-top:7px}
+@media(max-width:800px){.record-side{padding:22px 18px 10px}.track-copy h4{font-size:17px}.tracklist-heading{align-items:start;flex-direction:column;gap:10px}}
+@media(max-width:600px){.tracklist{padding-top:35px;padding-bottom:39px}.tracklist-heading h2{font-size:24px}.record-sides{grid-template-columns:1fr;gap:16px}.record-side{padding:24px 21px 13px}.record-side-heading h3{font-size:25px}.track-copy h4{font-size:19px}}
