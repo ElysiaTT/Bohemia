@@ -73,9 +73,13 @@ const columnBodies = new Map(columnSections.map(([, slug, body]) => [slug, body]
 for (const side of record) {
   if (!home.includes(`data-record-panel="${side.id}"`) || !home.includes(`data-record-face="${side.id}"`)) errors.push(`Missing panel or cover for ${side.id}`);
   if (!home.includes(`data-record-artwork="${side.id}"`) || !home.includes(`${base}/${side.artwork.image}?v=${side.artwork.revision}`) || !home.includes(`data-side-cover-title="${escape(side.artwork.title)}"`)) errors.push(`Missing independent cover identity: ${side.id}`);
+  if (!home.includes(`data-side-subtitle="${escape(`${side.name.toUpperCase()} / ${side.heading}`)}"`) || !home.includes(`data-side-descriptor="${escape(side.descriptor)}"`) || !home.includes(`data-side-intent="${escape(side.intent)}"`)) errors.push(`Missing synchronized side details: ${side.id}`);
   const cover = readFileSync(resolve('public', side.artwork.image), 'utf8');
-  if (side.id === 'side-a' && /endless|x japan/i.test(cover)) errors.push('Side A must keep only its Bohemia / Queen identity');
-  if (side.id === 'side-b' && /bohemia|queen/i.test(cover)) errors.push('Side B must keep only its endless refrain / X JAPAN identity');
+  const sharedBrand = "BOHEMIA'S RAIN / VOL. 01";
+  if (cover.split(sharedBrand).length !== 2) errors.push(`Expected one shared volume mark on ${side.id}`);
+  const sideIdentity = cover.replaceAll(sharedBrand, '');
+  if (side.id === 'side-a' && /endless|x japan/i.test(sideIdentity)) errors.push('Side A must keep its Bohemia / Queen identity beneath the shared brand');
+  if (side.id === 'side-b' && /bohemia|queen/i.test(sideIdentity)) errors.push('Side B must keep its endless refrain / X JAPAN identity beneath the shared brand');
   for (const track of side.tracks) {
     if (!track.note || !home.includes(escape(track.title)) || !home.includes(escape(track.note))) errors.push(`Missing title or Chinese description: ${track.slug}`);
     const body = columnBodies.get(track.slug) || '';

@@ -25,10 +25,14 @@ export function initRecord(root: HTMLElement) {
     }
     button.setAttribute('aria-pressed', String(index === 1));
     button.title = `翻至 ${next.dataset.sideLabel} — ${next.dataset.sideCoverTitle}`;
-    root.querySelectorAll<HTMLElement>('[data-record-button-label], [data-now-playing-side]').forEach(label => { label.textContent = active.dataset.sideLabel!; });
+    root.querySelectorAll<HTMLElement>('[data-record-button-label]').forEach(label => { label.textContent = `翻至 ${next.dataset.sideLabel}`; });
+    root.querySelectorAll<HTMLElement>('[data-now-playing-side]').forEach(label => { label.textContent = active.dataset.sideLabel!; });
     root.querySelectorAll<HTMLElement>('[data-now-playing-name], [data-record-hero-title]').forEach(label => { label.textContent = active.dataset.sideCoverTitle!; });
     root.querySelectorAll<HTMLElement>('[data-record-credit]').forEach(label => { label.textContent = active.dataset.sideCredit!; });
     root.querySelectorAll<HTMLElement>('[data-now-playing-heading]').forEach(label => { label.textContent = active.dataset.sideHeading!; });
+    root.querySelectorAll<HTMLElement>('[data-record-side-subtitle]').forEach(label => { label.textContent = active.dataset.sideSubtitle!; });
+    root.querySelectorAll<HTMLElement>('[data-record-side-descriptor]').forEach(label => { label.textContent = active.dataset.sideDescriptor!; });
+    root.querySelectorAll<HTMLElement>('[data-record-side-intent]').forEach(label => { label.textContent = active.dataset.sideIntent!; });
     root.querySelectorAll<HTMLElement>('[data-now-playing-count]').forEach(label => { label.textContent = `${active.dataset.sideCount} 个专栏`; });
     if (announce && status) status.textContent = `当前 ${active.dataset.sideLabel}，${active.dataset.sideCoverTitle}，${active.dataset.sideCount} 个专栏。`;
   };

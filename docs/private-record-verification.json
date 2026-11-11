@@ -1,0 +1,57 @@
+{
+  "checked_on": "2026-11-11",
+  "feature": "One private record with distinct Side A and Side B identities",
+  "type_check": { "errors": 0, "warnings": 0, "hints": 0 },
+  "automated_tests_passed": 22,
+  "controller": {
+    "default_side_a": true,
+    "consecutive_flips_checked": 60,
+    "labels_panels_faces_and_announcements_synchronized": true,
+    "reinitialization_does_not_add_handlers_or_reset_the_side": true,
+    "method": "Actual TypeScript controller exercised against a small DOM fixture; this is not browser animation testing."
+  },
+  "build": {
+    "bases": ["/", "/Bohemia/"],
+    "html_pages": 14,
+    "local_references": 426,
+    "public_posts": 6
+  },
+  "artwork": {
+    "exactly_one_shared_volume_mark_per_cover": true,
+    "shared_title_size": 128,
+    "shared_title_origin": [56, 210],
+    "shared_vinyl_center": [709, 463],
+    "shared_vinyl_outer_radius": 240,
+    "both_original_styles_retained": true,
+    "svg_references_resolve": true,
+    "review": "The actual two SVGs were rendered to PNG and visually inspected."
+  },
+  "css_review": {
+    "flip_duration_ms": 820,
+    "breathing_scale": 1.045,
+    "reduced_motion_covers_animations_and_transitions": true,
+    "both_programs_still_share_one_grid_cell": true,
+    "caption_and_button_have_separate_grid_columns": true,
+    "side_b_text_contrast_light": 4.98,
+    "side_b_text_contrast_dark": 8.56
+  },
+  "preserved": {
+    "all_14_column_objects_and_side_order": true,
+    "article_data_and_urls": true,
+    "search_json_matches_previous_live_version": true,
+    "rss_xml_matches_previous_live_version": true,
+    "new_dependencies": 0
+  },
+  "browser_checks": {
+    "status": "not completed",
+    "reason": "The browser routing host was unavailable. Native Chrome access was stopped by automatic safety checks because the current browser URL could not be determined with enough confidence. No further UI actions were attempted.",
+    "unverified": [
+      "Actual animation frames, flicker and mirrored text",
+      "Desktop, tablet and mobile layout and overlap in the browser",
+      "Light and dark theme appearance in the browser",
+      "Reduced-motion browser emulation"
+    ]
+  },
+  "previews": ["side-a-bohemia.png", "side-b-endless-refrain.png"],
+  "target": "https://elysiatt.github.io/Bohemia/"
+}

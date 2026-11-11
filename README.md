@@ -10,6 +10,8 @@
 
 两面的封面各自独立：**Side A / Bohemia.** 以四道菱形排列的明暗人像、歌剧拱门与酒红帷幕回应 Queen《波西米亚狂想曲》；**Side B / endless refrain.** 以冷紫雨夜、窗上的雨和水面回响回应 X JAPAN《ENDLESS RAIN》。两面黑胶共用 Side A 的尺寸与位置，统一站名 **bohemia's rain**，翻面同步切换封面、首页签名、灵感署名与 Now Playing，专栏分组仍为 The Signal 与 The Afterglow。
 
+两面均以小字号标注 `BOHEMIA'S RAIN / VOL. 01`，共用边距、主标题字号和 `BR — 01 / A`、`BR — 01 / B` 编号。封面下方显示 `THE SIGNAL / 理性的噪声` 或 `THE AFTERGLOW / 感性的回响`，按钮明确标注下一面。A 面的描述为 Research · Models · Machines / 探索世界如何运作；B 面为 Music · Photography · Life / 记录世界如何触动自己。局部暖红与冷紫随翻面切换，明暗主题和减少动态效果设置均保留。
+
 ![Side A · Bohemia](docs/side-a-bohemia.png)
 
 ![Side B · endless refrain.](docs/side-b-endless-refrain.png)
