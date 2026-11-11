@@ -52,7 +52,7 @@ const active = (path: string) => Astro.url.pathname.startsWith(withBase(path)) |
         <span class="brand-icon" aria-hidden="true"><svg width="31" height="31" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="13" stroke="currentColor" stroke-width="1.7" /><circle cx="16" cy="16" r="9" stroke="currentColor" stroke-width=".8" /><circle cx="16" cy="16" r="4" fill="currentColor" /><circle cx="16" cy="16" r="1.2" fill="var(--paper)" /></svg></span>
         <span class="wordmark">{site.title}<span class="brand-period">.</span></span>
       </a>
-      <span class="brand-note">a personal rhapsody</span>
+      <span class="brand-note">{site.subtitle}</span>
       <nav class="desktop-nav" aria-label="主导航">
         {nav.map(([path, label]) => <a class:list={{ active: active(path) }} aria-current={active(path) ? 'page' : undefined} href={withBase(path)}>{label}</a>)}
       </nav>

@@ -2,7 +2,7 @@
   {
     "id": "side-a",
     "side": "SIDE A",
-    "name": "THE SIGNAL",
+    "name": "The Signal",
     "heading": "理性的噪声",
     "intro": "机器学习、基础模型、机器人与闭环系统。把模型如何工作、为何失效、如何走进现实写下来。",
     "tracks": [
@@ -15,37 +15,37 @@
       {
         "slug": "wish-you-were-real",
         "title": "Wish You Were Real",
-        "note": "VLA 与具身智能：从模拟环境、行为学习到真实机器人。",
+        "note": "VLA、具身智能、机器人操作与 Sim-to-Real。",
         "inspiration": "Pink Floyd · Wish You Were Here"
       },
       {
         "slug": "the-dark-side-of-the-model",
         "title": "The Dark Side of the Model",
-        "note": "模型失败案例、评测陷阱、偏差与值得追问的研究问题。",
+        "note": "AI 模型局限、失败案例、Benchmark 与研究反思。",
         "inspiration": "Pink Floyd · The Dark Side of the Moon"
       },
       {
         "slug": "while-my-model-gently-dreams",
         "title": "While My Model Gently Dreams",
-        "note": "世界模型、生成模型，以及机器如何学习想象未来。",
+        "note": "世界模型、生成模型与未来状态预测。",
         "inspiration": "The Beatles · While My Guitar Gently Weeps"
       },
       {
         "slug": "stairway-to-latent-space",
         "title": "Stairway to Latent Space",
-        "note": "表示学习、Embedding、多模态与潜在空间的直觉。",
+        "note": "表示学习、Embedding 与多模态潜在空间。",
         "inspiration": "Led Zeppelin · Stairway to Heaven"
       },
       {
         "slug": "a-kind-of-emergence",
         "title": "A Kind of Emergence",
-        "note": "基础模型、规模化训练与涌现能力；替代 Silicon Rhapsody。",
+        "note": "基础模型、Scaling、涌现能力与模型训练。",
         "inspiration": "Queen · A Kind of Magic"
       },
       {
         "slug": "highway-to-inference",
         "title": "Highway to Inference",
-        "note": "模型推理、工程部署、延迟、吞吐量与性能优化。",
+        "note": "模型推理、工程部署、推理速度、延迟与性能优化。",
         "inspiration": "AC/DC · Highway to Hell"
       },
       {
@@ -59,7 +59,7 @@
   {
     "id": "side-b",
     "side": "SIDE B",
-    "name": "THE AFTERGLOW",
+    "name": "The Afterglow",
     "heading": "感性的回响",
     "intro": "摇滚、吉他、摄影、日常与旅途。重要的不是写得多完整，而是把值得记住的片刻留下。",
     "tracks": [
@@ -72,31 +72,29 @@
       {
         "slug": "art-of-becoming",
         "title": "Art of Becoming",
-        "note": "关于成长、选择、阅读，以及正在成为的自己。",
+        "note": "成长、选择、阅读与关于自己的思考。",
         "inspiration": "X JAPAN · ART OF LIFE"
       },
       {
         "slug": "after-the-encore",
         "title": "After the Encore",
-        "note": "X JAPAN、Queen、日本摇滚、专辑与演出随笔。",
-        "inspiration": "Live music · Encore"
+        "note": "X JAPAN、Queen、日本摇滚、专辑与音乐随笔。"
       },
       {
         "slug": "forever-in-distortion",
         "title": "Forever in Distortion",
-        "note": "电吉他、练习、音色与自己的音乐创作。",
-        "inspiration": "X JAPAN · Forever Love × Guitar Distortion"
+        "note": "电吉他、练习、音色、设备与音乐创作。"
       },
       {
         "slug": "these-are-the-days",
         "title": "These Are the Days",
-        "note": "日常碎片、平凡小事和不想遗忘的时刻。",
+        "note": "日常记录、生活碎片与值得保存的小事。",
         "inspiration": "Queen · These Are the Days of Our Lives"
       },
       {
         "slug": "across-two-worlds",
         "title": "Across Two Worlds",
-        "note": "城市、旅行、异乡与不同文化之间的观察。",
+        "note": "旅行、城市、异乡与不同文化之间的观察。",
         "inspiration": "Queen · Teo Torriatte (意象)"
       }
     ]

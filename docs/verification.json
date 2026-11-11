@@ -1,8 +1,7 @@
 {
   "checked_on": "2026-11-11",
   "site": "Bohemia",
-  "brand_inspiration": "Queen / Bohemian Rhapsody",
-  "columns": "Original example names retained; rock-band column names to be supplied by the owner.",
+  "feature": "Interactive double-sided record homepage",
   "type_check": {
     "errors": 0,
     "warnings": 0,
@@ -13,31 +12,43 @@
     "html_pages": 12
   },
   "local_references": {
-    "checked": 354,
+    "checked": 347,
     "missing": 0
   },
   "deployment_bases": [
     "/",
-    "/blog/"
+    "/Bohemia/"
   ],
-  "content": {
-    "published_example_posts": 6,
-    "example_notes": 4
+  "record": {
+    "side_a_columns": 8,
+    "side_b_columns": 6,
+    "default": "side-a",
+    "flip_duration_ms": 820,
+    "breathing_period_ms": 3000,
+    "single_source": "src/data/tracklist.json"
   },
   "browser_checks": [
-    "Bohemia page title, header, footer and naming explanation",
-    "Original record-sleeve artwork",
-    "Light and dark themes with preference persistence",
-    "Full-body search for Queen",
-    "Mobile navigation",
-    "320px / 390px / 768px / 1440px layouts without horizontal overflow"
+    "Default Side A; Side B excluded from accessibility tree",
+    "Side A -> Side B -> Side A, Enter and Space",
+    "12 rapid consecutive flips keep cover, button, columns and sidebar synchronized",
+    "Desktop card height delta: 0px; following flow delta < 0.001px",
+    "Mobile card height and following flow delta: 0px",
+    "320px and 390px screens: no horizontal overflow, single-column tracklist",
+    "Dark theme preserves record state; theme persists after navigation",
+    "Search for Queen and article navigation",
+    "Returning to home starts at Side A",
+    "Mobile menu",
+    "Minified production build: Side A default, Side B flip and no console errors",
+    "768px tablet: two-column tracklist, no horizontal overflow"
   ],
-  "console_errors_observed": 0,
-  "previews": {
-    "desktop": "docs/preview-home.jpg",
-    "mobile": "docs/preview-mobile.jpg",
-    "tablet": "docs/preview-tablet.jpg",
-    "full_page": "Not refreshed: the browser capture API could not capture the full page; previous-brand image archived in .local/history."
+  "reduced_motion": "CSS disables animation and transitions; controller has no animation-timer dependency. OS preference emulation is not exposed by the browser tool.",
+  "content": {
+    "existing_example_posts": 6,
+    "new_articles_created": 0,
+    "empty_columns": "Coming soon, no empty links"
   },
-  "public_deployment": "Local delivery; GitHub Pages workflow prepared, not published."
+  "public_deployment": {
+    "target": "https://elysiatt.github.io/Bohemia/",
+    "workflow_runs": "https://github.com/ElysiaTT/Bohemia/actions"
+  }
 }

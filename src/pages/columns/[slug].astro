@@ -1,0 +1,18 @@
+---
+import Base from '../../layouts/Base.astro';
+import PostCard from '../../components/PostCard.astro';
+import { getPosts, withBase } from '../../lib/posts';
+import { recordSides, columnPosts } from '../../lib/record';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return recordSides.flatMap(side => side.tracks.flatMap(track => {
+    const articles = columnPosts(posts, track.slug);
+    return articles.length ? [{ params: { slug: track.slug }, props: { side, track, articles } }] : [];
+  }));
+}
+const { side, track, articles } = Astro.props;
+---
+<Base title={track.title} description={track.note}>
+  <div class="wrap page-wrap"><a class="text-link" href={withBase('#record-tracklist')}>← 回到唱片</a><header class="page-heading"><span class="eyebrow">{side.side} / {side.name}</span><h1>{track.title}<span>.</span></h1><p>{track.note}</p></header><div class="writing-grid">{articles.map((post, index) => <PostCard post={post} index={index} />)}</div></div>
+</Base>

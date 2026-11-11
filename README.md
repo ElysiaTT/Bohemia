@@ -6,11 +6,13 @@
 
 一个为 GitHub Pages 制作的中文个人博客。名字取自 Queen 的《Bohemian Rhapsody》（《波西米亚狂想曲》），以原创黑胶封套、奶油纸色与酒红色建立视觉。每个专栏将像一支不同的摇滚乐队，组成同一个自由表达的舞台。
 
-专栏正式名称由站主稍后提供；目前保留技术、设计、生活、随想四个示例分类，没有预设乐队名单。
+首页是一张可翻面的唱片：**Side A — The Signal** 收录 8 个技术专栏，**Side B — The Afterglow** 收录 6 个生活专栏。博客副标题 **an endless refrain.** 呼应 X JAPAN《ENDLESS RAIN》。文章原有的技术、设计、生活、随想分类仍用于文章列表，不代替专栏。
 
 ![Bohemia 桌面首页预览](docs/preview-home.jpg)
 
 [手机预览](docs/preview-mobile.jpg)
+
+[Side A 专栏](docs/record-side-a-columns.jpg) · [Side B 专栏](docs/record-side-b-columns.jpg) · [Side B 封面](docs/record-side-b.jpg)
 
 ## 本地运行
 
@@ -59,6 +61,16 @@ npm run preview  # 预览已经构建的网站
 个人介绍位于 `src/pages/about/index.astro`，碎片位于 `src/data/notes.json`，配色与布局位于 `src/styles/global.css`。
 
 ## 写第一篇文章
+
+### 将文章收入专栏
+
+14 个专栏及其说明统一保存在 `src/data/tracklist.json`。专栏是长期写作方向，不是已经发布的文章；没有文章的栏目显示「即将更新」，不会生成空链接。
+
+在真实文章的 frontmatter 中增加 `column: "wish-you-were-real"`（或其他栏目 slug），同时保持 `draft: false`、`demo: false`。构建会自动生成 `columns/wish-you-were-real/`，汇总该专栏所有已发布文章。未声明 `column` 的原有示例不会被强行归类；未知栏目 slug 会在内容检查时报告错误。
+
+首页每次打开默认 Side A。封面右下角的 `SIDE A ↻` 按钮可用鼠标、Enter 或空格操作，统一切换封面、专栏和 Now Playing。封面翻面约 820ms，按钮呼吸约 3 秒；减少动态效果时即时切换。两面专栏共享高度，隐藏的一面使用 `inert` 与 `aria-hidden` 退出键盘及辅助技术导航。
+
+### 新建草稿
 
 ```powershell
 npm run new -- my-first-post "我的第一篇文章"
