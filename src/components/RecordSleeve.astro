@@ -1,47 +1,7 @@
 ---
 import type { RecordSide } from '../lib/record';
+import { withBase } from '../lib/posts';
 interface Props { side: RecordSide }
 const { side } = Astro.props;
-const back = side.id === 'side-b';
-const id = `sleeve-${side.id}`;
-const colors = back
-  ? { paper: '#211f25', ring: '#68505b', edge: '#c59a84', wave: '#be8a92', label: '#dfd1bd' }
-  : { paper: '#27221f', ring: '#9f3039', edge: '#d58a78', wave: '#af4550', label: '#e8dcc3' };
 ---
-<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="800" viewBox="0 0 1000 800" fill="none" role="img" aria-labelledby={`${id}-title ${id}-description`}>
-  <title id={`${id}-title`}>Bohemia — {side.side} / {side.name}</title>
-  <desc id={`${id}-description`}>{side.heading}。原创唱片封套，包含黑胶纹路、交织的声波与 {side.side} 编号。</desc>
-  <defs>
-    <radialGradient id={`${id}-disc`} cx=".35" cy=".3" r=".8"><stop stop-color={back ? '#35313b' : '#36302a'} /><stop offset=".6" stop-color="#201e1f" /><stop offset="1" stop-color="#151516" /></radialGradient>
-    <linearGradient id={`${id}-sheen`} x1="350" y1="180" x2="710" y2="650" gradientUnits="userSpaceOnUse"><stop stop-color="#d5b98c" stop-opacity=".16" /><stop offset=".45" stop-color="#cab38e" stop-opacity="0" /><stop offset=".8" stop-color="#eadac0" stop-opacity=".09" /><stop offset="1" stop-color="#cab38e" stop-opacity="0" /></linearGradient>
-    <pattern id={`${id}-grain`} width="6" height="6" patternUnits="userSpaceOnUse"><circle cx="1" cy="2" r=".6" fill="#f3e7ca" opacity=".1" /><circle cx="5" cy="5" r=".4" fill="#f3e7ca" opacity=".07" /></pattern>
-  </defs>
-  <path fill={colors.paper} d="M0 0h1000v800H0z" />
-  <path fill={`url(#${id}-grain)`} d="M0 0h1000v800H0z" />
-  <path d="M48 50h904M48 749h904" stroke="#dac7a8" stroke-opacity=".28" />
-  <text x="49" y="30" fill="#d2c0a5" font-family="monospace" font-size="11" letter-spacing="3">AN INDEPENDENT COLLECTION OF VOICES</text>
-  <text x="950" y="30" text-anchor="end" fill="#d2c0a5" font-family="monospace" font-size="11" letter-spacing="2">{side.side} / VOL. 01</text>
-  <circle cx="624" cy="409" r="280" fill={colors.ring} />
-  <circle cx="624" cy="409" r="265" stroke={colors.edge} stroke-opacity=".3" />
-  <circle cx="624" cy="409" r="242" fill={`url(#${id}-disc)`} />
-  <g stroke="#c3ad8c" stroke-opacity=".13">{Array.from({ length: 14 }, (_, index) => <circle cx="624" cy="409" r={230 - index * 9} />)}</g>
-  <circle cx="624" cy="409" r="242" fill={`url(#${id}-sheen)`} />
-  <circle cx="624" cy="409" r="86" fill={colors.label} />
-  <circle cx="624" cy="409" r="77" stroke="#443730" stroke-opacity=".3" />
-  <text x="624" y="380" text-anchor="middle" fill={colors.ring} font-family="Georgia,serif" font-style="italic" font-size="26">Bohemia</text>
-  <text x="624" y="439" text-anchor="middle" fill="#4e4237" font-family="monospace" font-size="8" letter-spacing="2">{side.name.toUpperCase()}</text>
-  <text x="624" y="455" text-anchor="middle" fill="#4e4237" font-family="monospace" font-size="8" letter-spacing="2">{side.side} / 33⅓ RPM</text>
-  <circle cx="624" cy="409" r="9" fill={colors.paper} /><circle cx="624" cy="409" r="3" fill="#f5f1e8" />
-  <text x="44" y="187" fill="#f1e6cf" font-family="Georgia,'Times New Roman',serif" font-style="italic" font-size="140" letter-spacing="-7">Bohemia.</text>
-  <text x="53" y="230" fill="#d8c5a8" font-family="Georgia,serif" font-style="italic" font-size="24" letter-spacing="1">an endless refrain.</text>
-  <g stroke-linecap="round">
-    <path d="M-35 544C115 544 148 323 263 323s94 299 213 299 133-317 251-317 116 235 307 235" stroke="#ebdbc0" stroke-width="2" />
-    <path d="M-35 559C117 559 147 344 263 344s94 299 213 299 133-317 251-317 116 235 307 235" stroke="#c89564" stroke-width="1.5" />
-    <path d="M-35 574C117 574 147 365 263 365s94 299 213 299 133-317 251-317 116 235 307 235" stroke={colors.wave} stroke-width="2" />
-  </g>
-  <text x="53" y="699" fill="#f0e3cc" font-family="Georgia,serif" font-style="italic" font-size="31">{side.name}</text>
-  <text x="53" y="726" fill="#b9a78e" font-family="monospace" font-size="10" letter-spacing="2">{side.side} / {String(side.tracks.length).padStart(2, '0')} COLUMNS / ONE ENDLESS RECORD</text>
-  <text x="950" y="708" text-anchor="end" fill="#d8c5a8" font-family="monospace" font-size="11" letter-spacing="2">PLAY IT YOUR WAY</text>
-  <text x="49" y="775" fill="#a3937f" font-family="monospace" font-size="9" letter-spacing="2">NO FIXED GENRE. JUST CURIOSITY.</text>
-  <text x="950" y="775" text-anchor="end" fill="#a3937f" font-family="monospace" font-size="9" letter-spacing="2">{back ? 'B' : 'A'} — 001</text>
-</svg>
+<img src={`${withBase(side.artwork.image)}?v=${side.artwork.revision}`} width="1000" height="800" alt={`${side.side} — ${side.artwork.title} ${side.artwork.description}`} data-record-artwork={side.id} decoding="async" />

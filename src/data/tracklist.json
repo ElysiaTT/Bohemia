@@ -3,6 +3,13 @@
     "id": "side-a",
     "side": "SIDE A",
     "name": "The Signal",
+    "artwork": {
+      "title": "Bohemia.",
+      "image": "images/bohemia-cover.svg",
+      "revision": "bohemia-stage-1",
+      "description": "酒红舞台、金色光束与黑胶唱片构成的原创封套，灵感来自 Queen 的《波西米亚狂想曲》。",
+      "credit": "QUEEN / BOHEMIAN RHAPSODY"
+    },
     "heading": "理性的噪声",
     "intro": "机器学习、基础模型、机器人与闭环系统。把模型如何工作、为何失效、如何走进现实写下来。",
     "tracks": [
@@ -61,6 +68,13 @@
     "id": "side-b",
     "side": "SIDE B",
     "name": "The Afterglow",
+    "artwork": {
+      "title": "endless refrain.",
+      "image": "images/endless-refrain-cover.svg",
+      "revision": "endless-rain-1",
+      "description": "冷紫雨夜、窗上雨线与水面回响构成的原创封套，灵感来自 X JAPAN 的《ENDLESS RAIN》。",
+      "credit": "X JAPAN / ENDLESS RAIN"
+    },
     "heading": "感性的回响",
     "intro": "摇滚、吉他、摄影、日常与旅途。重要的不是写得多完整，而是把值得记住的片刻留下。",
     "tracks": [

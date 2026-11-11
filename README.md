@@ -8,11 +8,15 @@
 
 首页是一张可翻面的唱片：**Side A — The Signal** 收录 8 个技术专栏，**Side B — The Afterglow** 收录 6 个生活专栏。博客副标题 **an endless refrain.** 呼应 X JAPAN《ENDLESS RAIN》。文章原有的技术、设计、生活、随想分类仍用于文章列表，不代替专栏。
 
-![Bohemia 桌面首页预览](docs/preview-home.jpg)
+两面的封面各自独立：**Side A / Bohemia.** 以酒红舞台与金色光束回应 Queen《波西米亚狂想曲》；**Side B / endless refrain.** 以冷紫雨夜、窗上的雨和水面回响回应 X JAPAN《ENDLESS RAIN》。翻面同步切换封面、首页签名、灵感署名与 Now Playing，专栏分组仍为 The Signal 与 The Afterglow。
+
+![Side A · Bohemia](docs/side-a-bohemia.png)
+
+![Side B · endless refrain.](docs/side-b-endless-refrain.png)
 
 [手机预览](docs/preview-mobile.jpg)
 
-[Side A 专栏](docs/record-side-a-columns.jpg) · [Side B 专栏](docs/record-side-b-columns.jpg) · [Side B 封面](docs/record-side-b.jpg)
+[Side A 专栏](docs/record-side-a-columns.jpg) · [Side B 专栏](docs/record-side-b-columns.jpg) · [Side B 封面](docs/side-b-endless-refrain.png)
 
 [手机专栏排版](docs/columns-mobile.jpg) · [平板深色排版](docs/columns-tablet-dark.jpg)
 
@@ -139,7 +143,7 @@ demo: false
 
 展示字体为现有标题、碎片和引用制作的 Noto Serif SC 子集；新字符会自动使用系统衬线字体。需要更新子集时运行 `python scripts/fetch-assets.py`（也会重新下载示例图片；仅更新字体可加 `--fonts-only`）。正文使用本地系统字体。
 
-Bohemia 的原创封套保存在 `public/images/bohemia-cover.svg`；编辑后运行 `npm run brand`，重新生成适合社交分享的 `bohemia-og.png`。首页和关于页的音乐意象表达博客的组织方式，原有文章分类暂未替换为乐队名称。
+Side A 的原创封套保存在 `public/images/bohemia-cover.svg`，Side B 保存在 `public/images/endless-refrain-cover.svg`。`src/data/tracklist.json` 中各面的 `artwork` 字段保存封面名称、路径、说明与灵感署名。编辑后运行 `npm run brand`，生成两张独立预览，以及默认使用 A 面的社交分享图 `bohemia-og.png`。首页和关于页的音乐意象表达博客的组织方式，原有文章分类暂未替换为乐队名称。
 
 ## 部署到 GitHub Pages
 

@@ -24,12 +24,13 @@ export function initRecord(root: HTMLElement) {
       face.setAttribute('aria-hidden', String(!selected));
     }
     button.setAttribute('aria-pressed', String(index === 1));
-    button.title = `翻至 ${next.dataset.sideLabel} — ${next.dataset.sideName}`;
+    button.title = `翻至 ${next.dataset.sideLabel} — ${next.dataset.sideCoverTitle}`;
     root.querySelectorAll<HTMLElement>('[data-record-button-label], [data-now-playing-side]').forEach(label => { label.textContent = active.dataset.sideLabel!; });
-    root.querySelectorAll<HTMLElement>('[data-now-playing-name]').forEach(label => { label.textContent = active.dataset.sideName!; });
+    root.querySelectorAll<HTMLElement>('[data-now-playing-name], [data-record-hero-title]').forEach(label => { label.textContent = active.dataset.sideCoverTitle!; });
+    root.querySelectorAll<HTMLElement>('[data-record-credit]').forEach(label => { label.textContent = active.dataset.sideCredit!; });
     root.querySelectorAll<HTMLElement>('[data-now-playing-heading]').forEach(label => { label.textContent = active.dataset.sideHeading!; });
     root.querySelectorAll<HTMLElement>('[data-now-playing-count]').forEach(label => { label.textContent = `${active.dataset.sideCount} 个专栏`; });
-    if (announce && status) status.textContent = `当前 ${active.dataset.sideLabel}，${active.dataset.sideName}，${active.dataset.sideCount} 个专栏。`;
+    if (announce && status) status.textContent = `当前 ${active.dataset.sideLabel}，${active.dataset.sideCoverTitle}，${active.dataset.sideCount} 个专栏。`;
   };
 
   // Default to Side A on every visit, independent of theme or previous visits.

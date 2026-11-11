@@ -7,7 +7,7 @@ const { posts } = Astro.props;
 ---
 <section class="record-tracklist" id="record-tracklist" aria-label="当前唱片的专栏">
   <div class="record-programs">
-    {recordSides.map((side, index) => <section class="record-program" data-record-panel={side.id} data-side-label={side.side} data-side-name={side.name} data-side-heading={side.heading} data-side-count={side.tracks.length} aria-labelledby={`${side.id}-program-title`} aria-hidden={index === 1 ? 'true' : 'false'} inert={index === 1}>
+    {recordSides.map((side, index) => <section class="record-program" data-record-panel={side.id} data-side-label={side.side} data-side-name={side.name} data-side-cover-title={side.artwork.title} data-side-credit={side.artwork.credit} data-side-heading={side.heading} data-side-count={side.tracks.length} aria-labelledby={`${side.id}-program-title`} aria-hidden={index === 1 ? 'true' : 'false'} inert={index === 1}>
       <header class="record-program-header"><div><p class="eyebrow">{side.side} <span aria-hidden="true">/</span> {String(side.tracks.length).padStart(2, '0')} COLUMNS</p><h3 id={`${side.id}-program-title`}>{side.name}<span>.</span></h3><p class="record-program-heading">{side.heading}</p></div><span class="record-program-mark" aria-hidden="true">{index === 0 ? 'A' : 'B'}<i>33⅓<br />RPM</i></span></header>
       <p class="record-program-intro">{side.intro}</p>
       <ol class="record-columns">

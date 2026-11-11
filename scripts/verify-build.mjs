@@ -57,6 +57,7 @@ const home = readFileSync(resolve(root, 'index.html'), 'utf8');
 const record = JSON.parse(readFileSync(resolve('src/data/tracklist.json'), 'utf8'));
 const escape = value => value.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
 const slugs = record.flatMap(side => side.tracks.map(track => track.slug));
+if (new Set(record.map(side => side.artwork.image)).size !== 2) errors.push('The two record sides must use separate cover assets');
 if (record.length !== 2 || record[0].tracks.length !== 8 || record[1].tracks.length !== 6) errors.push('Expected 8 Side A columns and 6 Side B columns');
 if (new Set(slugs).size !== slugs.length) errors.push('Record column IDs must be unique');
 if (!home.includes('data-record-side="side-a"')) errors.push('Home must default to Side A');
@@ -68,6 +69,10 @@ if (columnSections.length !== slugs.length) errors.push('Each record column must
 const columnBodies = new Map(columnSections.map(([, slug, body]) => [slug, body]));
 for (const side of record) {
   if (!home.includes(`data-record-panel="${side.id}"`) || !home.includes(`data-record-face="${side.id}"`)) errors.push(`Missing panel or cover for ${side.id}`);
+  if (!home.includes(`data-record-artwork="${side.id}"`) || !home.includes(`${base}/${side.artwork.image}?v=${side.artwork.revision}`) || !home.includes(`data-side-cover-title="${escape(side.artwork.title)}"`)) errors.push(`Missing independent cover identity: ${side.id}`);
+  const cover = readFileSync(resolve('public', side.artwork.image), 'utf8');
+  if (side.id === 'side-a' && /endless|x japan/i.test(cover)) errors.push('Side A must keep only its Bohemia / Queen identity');
+  if (side.id === 'side-b' && /bohemia|queen/i.test(cover)) errors.push('Side B must keep only its endless refrain / X JAPAN identity');
   for (const track of side.tracks) {
     if (!track.note || !home.includes(escape(track.title)) || !home.includes(escape(track.note))) errors.push(`Missing title or Chinese description: ${track.slug}`);
     const body = columnBodies.get(track.slug) || '';

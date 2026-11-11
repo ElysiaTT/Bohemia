@@ -6,7 +6,7 @@
 .record-scene { position: relative; aspect-ratio: 1.25; perspective: 1450px; border-radius: 2px; box-shadow: 7px 7px 0 var(--line); }
 .record-flipper { position: absolute; inset: 0; transform: rotateY(0deg); transform-style: preserve-3d; transition: transform 820ms cubic-bezier(.22,.65,.24,1); }
 .record-face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: 2px; }
-.record-face svg { display: block; width: 100%; height: 100%; border-radius: inherit; }
+.record-face img { display: block; width: 100%; height: 100%; border-radius: inherit; object-fit: cover; }
 .record-face-back { transform: rotateY(180deg); }
 [data-record-side="side-b"] .record-flipper { transform: rotateY(180deg); }
 .record-showcase figcaption { margin-top: 17px; align-items: center; gap: 12px; min-height: 44px; }

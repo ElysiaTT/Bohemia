@@ -12,7 +12,7 @@ import { recordSides } from '../lib/record';
     <span class="record-caption">翻过唱片，听见另一面。</span>
     <span class="record-toggle-wrap">
       <span class="record-toggle-hint" id="record-toggle-hint">点击翻面</span>
-      <button type="button" class="record-toggle" data-record-toggle aria-label="切换唱片正反面" aria-pressed="false" aria-controls="record-tracklist" aria-describedby="record-status record-toggle-hint" title={`翻至 ${recordSides[1].side} — ${recordSides[1].name}`} disabled>
+      <button type="button" class="record-toggle" data-record-toggle aria-label="切换唱片正反面" aria-pressed="false" aria-controls="record-tracklist" aria-describedby="record-status record-toggle-hint" title={`翻至 ${recordSides[1].side} — ${recordSides[1].artwork.title}`} disabled>
         <span class="record-toggle-surface"><span data-record-button-label>{recordSides[0].side}</span><svg class="record-toggle-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 7v5h-5M20 12a8 8 0 1 0-2.3 5.6" /></svg></span>
       </button>
     </span>
