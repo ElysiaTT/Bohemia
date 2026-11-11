@@ -1,6 +1,6 @@
 ---
 title: Claude plays robotics的感想
-description: 阅读了Claude plays robotics的感想的感想，介绍了LLM 的机器人能力不仅取决于模型本身，还高度依赖它能调用什么工具、拥有多大的控制权限，以及能否利用执行反馈修正自己的行为。
+description: 阅读了Claude plays robotics的感想
 date: 2026-11-11
 category: 技术
 tags: []
@@ -10,7 +10,6 @@ featured: false
 column: the-loop-must-go-on
 cover: images/uploads/1794378106995-f5e41aca.png
 ---
-
 
 # Claude Plays Robotics：当 LLM 开始控制机器人
 
