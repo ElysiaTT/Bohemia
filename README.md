@@ -1,14 +1,14 @@
-# Bohemia
+# bohemia's rain
 
 > 不同的声音，同一场共鸣。
 
 源码仓库：[ElysiaTT/Bohemia](https://github.com/ElysiaTT/Bohemia) · 默认分支：`main`
 
-一个为 GitHub Pages 制作的中文个人博客。名字取自 Queen 的《Bohemian Rhapsody》（《波西米亚狂想曲》），以原创黑胶封套、奶油纸色与酒红色建立视觉。每个专栏将像一支不同的摇滚乐队，组成同一个自由表达的舞台。
+一个为 GitHub Pages 制作的中文个人博客。名字将 Queen 的《Bohemian Rhapsody》（《波西米亚狂想曲》）与 X JAPAN 的《ENDLESS RAIN》连接起来，以原创黑胶封套、奶油纸色与酒红色建立视觉。每个专栏像一支不同的摇滚乐队，组成同一个自由表达的舞台。
 
 首页是一张可翻面的唱片：**Side A — The Signal** 收录 8 个技术专栏，**Side B — The Afterglow** 收录 6 个生活专栏。博客副标题 **an endless refrain.** 呼应 X JAPAN《ENDLESS RAIN》。文章原有的技术、设计、生活、随想分类仍用于文章列表，不代替专栏。
 
-两面的封面各自独立：**Side A / Bohemia.** 以酒红舞台与金色光束回应 Queen《波西米亚狂想曲》；**Side B / endless refrain.** 以冷紫雨夜、窗上的雨和水面回响回应 X JAPAN《ENDLESS RAIN》。翻面同步切换封面、首页签名、灵感署名与 Now Playing，专栏分组仍为 The Signal 与 The Afterglow。
+两面的封面各自独立：**Side A / Bohemia.** 以四道菱形排列的明暗人像、歌剧拱门与酒红帷幕回应 Queen《波西米亚狂想曲》；**Side B / endless refrain.** 以冷紫雨夜、窗上的雨和水面回响回应 X JAPAN《ENDLESS RAIN》。两面黑胶共用 Side A 的尺寸与位置，统一站名 **bohemia's rain**，翻面同步切换封面、首页签名、灵感署名与 Now Playing，专栏分组仍为 The Signal 与 The Afterglow。
 
 ![Side A · Bohemia](docs/side-a-bohemia.png)
 
@@ -143,7 +143,7 @@ demo: false
 
 展示字体为现有标题、碎片和引用制作的 Noto Serif SC 子集；新字符会自动使用系统衬线字体。需要更新子集时运行 `python scripts/fetch-assets.py`（也会重新下载示例图片；仅更新字体可加 `--fonts-only`）。正文使用本地系统字体。
 
-Side A 的原创封套保存在 `public/images/bohemia-cover.svg`，Side B 保存在 `public/images/endless-refrain-cover.svg`。`src/data/tracklist.json` 中各面的 `artwork` 字段保存封面名称、路径、说明与灵感署名。编辑后运行 `npm run brand`，生成两张独立预览，以及默认使用 A 面的社交分享图 `bohemia-og.png`。首页和关于页的音乐意象表达博客的组织方式，原有文章分类暂未替换为乐队名称。
+Side A 的原创封套保存在 `public/images/bohemia-cover.svg`，Side B 保存在 `public/images/endless-refrain-cover.svg`。`src/data/tracklist.json` 中各面的 `artwork` 字段保存封面名称、路径、说明与灵感署名。黑胶的公共形状保存在 `scripts/record-vinyl.mjs`，以 Side A 原始圆心 `(709, 463)`、外半径 `240`、唱片半径 `208` 为准。编辑后运行 `npm run brand`，会同步两面的黑胶形状，生成两张独立预览，以及带站名的社交分享图 `bohemia-og.png`。首页和关于页的音乐意象表达博客的组织方式，原有文章分类暂未替换为乐队名称。
 
 ## 部署到 GitHub Pages
 

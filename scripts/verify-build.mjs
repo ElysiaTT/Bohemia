@@ -10,7 +10,7 @@ walk(root);
 const htmlFiles = files.filter(file => extname(file) === '.html');
 let count = 0;
 const errors = [];
-const unescape = value => value.replaceAll('&amp;', '&').replaceAll('&#39;', "'").replaceAll('&quot;', '"');
+const unescape = value => value.replaceAll('&amp;', '&').replaceAll('&#39;', "'").replaceAll('&#x27;', "'").replaceAll('&apos;', "'").replaceAll('&quot;', '"');
 
 function checkReference(reference, source, route) {
   if (!reference || /^(?:https?:|mailto:|tel:|data:|javascript:|\/\/)/i.test(reference)) return;
@@ -54,6 +54,9 @@ if (rss.includes('localhost') && base) errors.push('RSS still contains localhost
 const manifest = readFileSync(resolve(root, 'sitemap-index.xml'), 'utf8');
 if (base && !manifest.includes(`${base}/sitemap-0.xml`)) errors.push('Sitemap does not include deployment base');
 const home = readFileSync(resolve(root, 'index.html'), 'utf8');
+const site = JSON.parse(readFileSync(resolve('src/data/site.json'), 'utf8'));
+if (!unescape(home).includes(`<title>${site.title} — ${site.subtitle}</title>`) || !unescape(home).includes(`content="${site.title}"`)) errors.push('Home title and sharing metadata must use the current site name');
+if (!unescape(rss).includes(site.title)) errors.push('RSS must use the current site name');
 const record = JSON.parse(readFileSync(resolve('src/data/tracklist.json'), 'utf8'));
 const escape = value => value.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
 const slugs = record.flatMap(side => side.tracks.map(track => track.slug));

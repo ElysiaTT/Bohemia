@@ -1,0 +1,27 @@
+{
+  "checked_on": "2026-11-11",
+  "feature": "bohemia's rain title, aligned vinyl geometry and Bohemian Rhapsody artwork",
+  "type_check": { "errors": 0, "warnings": 0, "hints": 0 },
+  "automated_tests_passed": 19,
+  "build": {
+    "html_pages": 14,
+    "local_references": 426,
+    "public_posts": 6,
+    "bases": ["/", "/Bohemia/"]
+  },
+  "artwork": {
+    "view_box": "0 0 1000 800",
+    "shared_center": [709, 463],
+    "shared_outer_radius": 240,
+    "shared_record_radius": 208,
+    "all_17_circle_geometries_match": true,
+    "svg_references_resolve": true,
+    "side_a": "Four theatrical faces in a diamond, an opera arch and burgundy curtains",
+    "side_b": "Rain window and water ripples retained, vinyl aligned to Side A"
+  },
+  "branding": "Header, footer, page titles, sharing metadata, RSS and about copy use bohemia's rain. Repository and Pages path remain Bohemia.",
+  "visual_review": "Actual SVGs rendered to PNG and inspected, including the sharing image. Browser preview host was unavailable; responsive UI and flip animation were not rechecked in a browser.",
+  "previews": ["side-a-bohemia.png", "side-b-endless-refrain.png"],
+  "content": "No article content or column membership changed.",
+  "target": "https://elysiatt.github.io/Bohemia/"
+}

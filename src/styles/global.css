@@ -33,3 +33,9 @@
 .about-hero-image img{filter:none;object-position:50% 45%}
 .about-hero-image>span{background:#27221fc9;padding:8px 10px}
 @media(max-width:600px){.record-visual .hero-photo{aspect-ratio:1.25;box-shadow:5px 5px 0 var(--line)}.record-visual figcaption{margin-top:17px}}
+/* The longer title keeps its full spelling beside the mobile navigation. */
+.brand{flex-shrink:0}.wordmark{white-space:nowrap;font-size:36px}.footer-brand{white-space:nowrap}
+@media(max-width:900px){.brand-note{display:none}.wordmark{font-size:30px}.desktop-nav{gap:20px}.header-tools{margin-left:20px}}
+@media(max-width:700px) and (min-width:601px){.brand{gap:8px}.brand-icon{width:24px}.brand-icon svg{width:24px}.wordmark{font-size:27px}.desktop-nav{gap:15px}.header-tools{margin-left:13px;gap:3px}}
+@media(max-width:600px){.brand{gap:8px}.wordmark{font-size:clamp(22px,6.2vw,30px);letter-spacing:-1px}.brand-icon{width:23px}.brand-icon svg{width:23px}.header-tools{margin-left:auto;gap:2px}.header-tools .icon-button{min-width:32px;min-height:38px;padding:6px}.tool-divider{margin-inline:0}.footer-top{flex-wrap:wrap;gap:12px 18px}.footer-brand{font-size:27px}.footer-top>p{order:3;flex-basis:100%}}
+@media(max-width:360px){.site-header{padding-inline:18px}.brand{gap:6px}.brand-icon,.brand-icon svg{width:20px}.wordmark{font-size:22px}}

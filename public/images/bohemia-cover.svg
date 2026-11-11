@@ -1,41 +1,63 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1000" height="800" viewBox="0 0 1000 800" fill="none" role="img" aria-labelledby="title description">
   <title id="title">Bohemia. — Side A</title>
-  <desc id="description">An original theatrical record sleeve inspired by Queen and Bohemian Rhapsody: vermilion curtains, golden stage light, an abstract celestial rosette and a black vinyl record.</desc>
+  <desc id="description">An original tribute to the drama of Queen's Bohemian Rhapsody: four illuminated theatrical faces in a diamond, an opera proscenium, burgundy curtains and a golden-lit vinyl record.</desc>
   <defs>
-    <linearGradient id="stage" x1="0" y1="0" x2="900" y2="800" gradientUnits="userSpaceOnUse"><stop stop-color="#321f20"/><stop offset=".52" stop-color="#241d1c"/><stop offset="1" stop-color="#141719"/></linearGradient>
-    <linearGradient id="curtain" x1="50" y1="200" x2="540" y2="650" gradientUnits="userSpaceOnUse"><stop stop-color="#b13f45"/><stop offset=".55" stop-color="#7e2b35"/><stop offset="1" stop-color="#44232c"/></linearGradient>
-    <linearGradient id="light" x1="620" y1="118" x2="540" y2="680" gradientUnits="userSpaceOnUse"><stop stop-color="#efd2a0" stop-opacity=".52"/><stop offset="1" stop-color="#efd2a0" stop-opacity="0"/></linearGradient>
+    <linearGradient id="stage" x1="0" y1="0" x2="900" y2="800" gradientUnits="userSpaceOnUse"><stop stop-color="#301f24"/><stop offset=".52" stop-color="#201b1e"/><stop offset="1" stop-color="#121519"/></linearGradient>
+    <linearGradient id="curtain" x1="0" y1="100" x2="300" y2="700" gradientUnits="userSpaceOnUse"><stop stop-color="#95303e"/><stop offset=".55" stop-color="#612432"/><stop offset="1" stop-color="#301d28"/></linearGradient>
+    <radialGradient id="spotlight"><stop stop-color="#e9c892" stop-opacity=".17"/><stop offset="1" stop-color="#1a181c" stop-opacity="0"/></radialGradient>
+    <linearGradient id="beam" x1="585" y1="90" x2="585" y2="690" gradientUnits="userSpaceOnUse"><stop stop-color="#ebd4ae" stop-opacity=".2"/><stop offset="1" stop-color="#ebd4ae" stop-opacity="0"/></linearGradient>
+    <linearGradient id="face-light" x1="-9" y1="-40" x2="9" y2="50" gradientUnits="userSpaceOnUse"><stop stop-color="#e5d1af"/><stop offset=".3" stop-color="#b99f7e"/><stop offset=".63" stop-color="#6a5447"/><stop offset="1" stop-color="#201b20"/></linearGradient>
     <radialGradient id="vinyl" cx=".34" cy=".3" r=".8"><stop stop-color="#3d3530"/><stop offset=".48" stop-color="#252222"/><stop offset="1" stop-color="#0d1012"/></radialGradient>
     <linearGradient id="sheen" x1="580" y1="230" x2="860" y2="680" gradientUnits="userSpaceOnUse"><stop stop-color="#e9cf9f" stop-opacity=".2"/><stop offset=".48" stop-color="#e9cf9f" stop-opacity="0"/><stop offset=".78" stop-color="#e9cf9f" stop-opacity=".13"/><stop offset="1" stop-color="#e9cf9f" stop-opacity="0"/></linearGradient>
     <pattern id="grain" width="7" height="7" patternUnits="userSpaceOnUse"><circle cx="1" cy="2" r=".6" fill="#f1dfbd" opacity=".09"/><circle cx="5" cy="6" r=".45" fill="#f1dfbd" opacity=".05"/></pattern>
-    <clipPath id="rosette"><circle cx="255" cy="455" r="127"/></clipPath>
+    <g id="theatrical-face">
+      <path d="M-47 40c-8-26-4-65 12-82 10-15 45-18 64-3 23 17 29 58 18 85L25 58h-50z" fill="#111318"/>
+      <path d="m-18 40-28 13-12 28H58L44 53 18 40z" fill="#121318"/>
+      <path d="M0-38c19 0 32 13 30 32l-5 26C20 36 9 47 0 49c-10-2-21-13-26-29l-5-26c-1-20 12-32 31-32z" fill="url(#face-light)"/>
+      <path d="M-26-9q12-8 22 2l-3 7-16-3zm52 0Q14-17 4-7l3 7 16-3z" fill="#362d29"/>
+      <path d="M-23-5q9-5 17 0M6-5q9-5 17 0" stroke="#14151a" stroke-width="3" stroke-linecap="round"/>
+      <path d="m0-7-5 24 8 3 4-3" stroke="#ddc19c" stroke-opacity=".45" stroke-width="1.4"/>
+      <path d="M-12 29q12-5 24 0l-7 3H-5z" fill="#211c20"/>
+      <path d="M-29-22q10-14 22-13m13 0q12-1 23 13" stroke="#fae7c7" stroke-opacity=".18" stroke-width="1.5"/>
+      <path d="m-17 45-5 12h44l-17-9" fill="#18171d"/>
+    </g>
   </defs>
   <path fill="url(#stage)" d="M0 0h1000v800H0z"/>
-  <path d="M0 0h340v800H0z" fill="url(#curtain)"/>
-  <path d="M0 0h65v800H0zm109 0h25v800h-25zm79 0h14v800h-14zm69 0h32v800h-32z" fill="#2c1922" opacity=".17"/>
-  <path d="M476 79 294 697h205L663 79z" fill="url(#light)"/>
-  <path d="M675 81 521 696h302L740 81z" fill="url(#light)" opacity=".47"/>
+  <path d="M0 0h104q-3 140 43 253l-40 547H0zM1000 0H929q8 152-19 242l47 558h43z" fill="url(#curtain)"/>
+  <path d="M25 0q-8 160 32 286L27 800M66 0q-4 149 34 270L71 800M972 0q-2 174-22 271l36 529" stroke="#e5a08b" stroke-opacity=".13" stroke-width="2"/>
+  <ellipse cx="255" cy="440" rx="190" ry="190" fill="url(#spotlight)"/>
+  <path d="M550 79 397 696h207L651 79zM742 79 620 696h298L802 79z" fill="url(#beam)"/>
   <path d="M42 54h916M42 745h916" stroke="#ead4ac" stroke-opacity=".35"/>
   <text x="44" y="35" fill="#e5cda7" font-family="monospace" font-size="11" letter-spacing="3">A PERSONAL RHAPSODY</text>
   <text x="955" y="35" text-anchor="end" fill="#e5cda7" font-family="monospace" font-size="11" letter-spacing="2.5">SIDE A / 01</text>
-  <path d="M83 562V422a172 172 0 0 1 344 0v140" stroke="#e7c48f" stroke-opacity=".58"/>
-  <path d="M101 560V423a154 154 0 0 1 308 0v137" stroke="#e7c48f" stroke-opacity=".22"/>
-  <g clip-path="url(#rosette)" stroke="#e7c48f" stroke-opacity=".35">
-    <circle cx="255" cy="455" r="126"/><circle cx="255" cy="455" r="105"/><circle cx="255" cy="455" r="61"/>
-    <path d="M255 328v254M128 455h254M165 365l180 180M165 545l180-180M206 338l98 234M138 406l234 98M138 504l234-98M206 572l98-234"/>
-    <path d="m255 341 35 79 79 35-79 35-35 79-35-79-79-35 79-35z" fill="#e4be88" fill-opacity=".05"/>
+  <path d="M89 601V438a166 166 0 0 1 332 0v163M104 601V438a151 151 0 0 1 302 0v163" stroke="#d9b382" stroke-opacity=".27"/>
+  <path d="M94 602h322M82 608h346" stroke="#d9b382" stroke-opacity=".24"/>
+  <path d="m255 298 115 140-115 141-115-141z" stroke="#c6a57f" stroke-opacity=".13"/>
+  <g id="four-voices">
+    <path d="M220 325q-8-26 18-40 30-15 51 16l9 52-30-42-30 5-21 44z" fill="#85725b" fill-opacity=".5"/>
+    <use href="#theatrical-face" transform="translate(255 340) scale(.92)"/>
+    <path d="M120 449c-22-8-20-29-12-40-17-15 0-30 12-29-4-17 16-25 26-17 12-18 28-12 32 1 17-5 31 7 27 22 17 9 18 24 8 34 8 15-1 32-14 34l-12-65-52 4z" fill="#15151b"/>
+    <use href="#theatrical-face" transform="translate(164 431) scale(1.04)"/>
+    <use href="#theatrical-face" transform="translate(346 431) scale(1.04)"/>
+    <path d="M309 410q5-40 37-31 25-8 35 28l-18-15-14-2-20 8z" fill="#201d20"/>
+    <use href="#theatrical-face" transform="translate(255 516)"/>
+    <path d="M217 505q-2-31 21-40 37-12 52 30l-22-17-32 7z" fill="#211c20"/>
   </g>
-  <path d="m255 398 11 45 45 12-45 12-11 45-12-45-45-12 45-12z" fill="#f2d6a4"/>
-  <circle cx="709" cy="463" r="240" fill="#a43840"/>
-  <circle cx="709" cy="463" r="228" stroke="#eac194" stroke-opacity=".52"/>
-  <circle cx="709" cy="463" r="208" fill="url(#vinyl)"/>
-  <g stroke="#e0c39a" stroke-opacity=".13"><circle cx="709" cy="463" r="198"/><circle cx="709" cy="463" r="187"/><circle cx="709" cy="463" r="176"/><circle cx="709" cy="463" r="165"/><circle cx="709" cy="463" r="154"/><circle cx="709" cy="463" r="143"/><circle cx="709" cy="463" r="132"/><circle cx="709" cy="463" r="121"/><circle cx="709" cy="463" r="110"/><circle cx="709" cy="463" r="99"/></g>
-  <circle cx="709" cy="463" r="208" fill="url(#sheen)"/>
-  <circle cx="709" cy="463" r="65" fill="#e8d5b0"/>
-  <circle cx="709" cy="463" r="57" stroke="#a74b48" stroke-opacity=".35"/>
-  <text x="709" y="449" text-anchor="middle" fill="#86323b" font-family="Georgia,serif" font-size="17" font-style="italic">Bohemia.</text>
-  <circle cx="709" cy="463" r="6" fill="#292321"/>
-  <text x="709" y="490" text-anchor="middle" fill="#6e5040" font-family="monospace" font-size="7" letter-spacing="1.7">A / 33⅓ RPM</text>
+  <text x="255" y="633" text-anchor="middle" fill="#baa07f" font-family="monospace" font-size="8" letter-spacing="1.8">BALLAD / OPERA / ROCK / CODA</text>
+  <!-- record-vinyl:start -->
+  <g id="record-vinyl" data-center="709 463" data-outer-radius="240">
+    <circle cx="709" cy="463" r="240" fill="#a43840"/>
+    <circle cx="709" cy="463" r="228" stroke="#eac194" stroke-opacity=".52"/>
+    <circle cx="709" cy="463" r="208" fill="url(#vinyl)"/>
+    <g stroke="#eac194" stroke-opacity=".13"><circle cx="709" cy="463" r="198" /><circle cx="709" cy="463" r="187" /><circle cx="709" cy="463" r="176" /><circle cx="709" cy="463" r="165" /><circle cx="709" cy="463" r="154" /><circle cx="709" cy="463" r="143" /><circle cx="709" cy="463" r="132" /><circle cx="709" cy="463" r="121" /><circle cx="709" cy="463" r="110" /><circle cx="709" cy="463" r="99" /></g>
+    <circle cx="709" cy="463" r="208" fill="url(#sheen)"/>
+    <circle cx="709" cy="463" r="65" fill="#e8d5b0"/>
+    <circle cx="709" cy="463" r="57" stroke="#86323b" stroke-opacity=".35"/>
+    <text x="709" y="449" text-anchor="middle" fill="#86323b" font-family="Georgia,serif" font-size="17" font-style="italic">Bohemia.</text>
+    <circle cx="709" cy="463" r="6" fill="#252329"/>
+    <text x="709" y="490" text-anchor="middle" fill="#86323b" font-family="monospace" font-size="7" letter-spacing="1.7">A / 33⅓ RPM</text>
+  </g>
+  <!-- record-vinyl:end -->
   <text x="53" y="204" fill="#f4e6c9" font-family="Georgia,'Times New Roman',serif" font-size="151" font-style="italic" letter-spacing="-7">Bohemia.</text>
   <text x="62" y="244" fill="#e7c99b" font-family="monospace" font-size="11" letter-spacing="4.2">MANY MOVEMENTS. ONE VOICE.</text>
   <path d="M56 651h356" stroke="#d2ad7a" stroke-opacity=".4"/>

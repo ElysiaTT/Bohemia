@@ -6,7 +6,7 @@
     <radialGradient id="glow" cx=".77" cy=".31" r=".59"><stop stop-color="#c8b3c8" stop-opacity=".5"/><stop offset=".38" stop-color="#ad8ea9" stop-opacity=".13"/><stop offset="1" stop-color="#7e6c90" stop-opacity="0"/></radialGradient>
     <linearGradient id="rainlight" x1="750" y1="134" x2="750" y2="715" gradientUnits="userSpaceOnUse"><stop stop-color="#ebd7d8" stop-opacity=".45"/><stop offset="1" stop-color="#b6bad4" stop-opacity="0"/></linearGradient>
     <radialGradient id="vinyl" cx=".32" cy=".3" r=".8"><stop stop-color="#44424f"/><stop offset=".5" stop-color="#292b37"/><stop offset="1" stop-color="#101822"/></radialGradient>
-    <linearGradient id="sheen" x1="635" y1="448" x2="900" y2="761" gradientUnits="userSpaceOnUse"><stop stop-color="#bdb4d9" stop-opacity=".23"/><stop offset=".48" stop-color="#bdb4d9" stop-opacity="0"/><stop offset="1" stop-color="#bdb4d9" stop-opacity=".11"/></linearGradient>
+    <linearGradient id="sheen" x1="580" y1="230" x2="860" y2="680" gradientUnits="userSpaceOnUse"><stop stop-color="#bdb4d9" stop-opacity=".23"/><stop offset=".48" stop-color="#bdb4d9" stop-opacity="0"/><stop offset="1" stop-color="#bdb4d9" stop-opacity=".11"/></linearGradient>
     <pattern id="grain" width="6" height="6" patternUnits="userSpaceOnUse"><circle cx="1" cy="2" r=".5" fill="#ebdbe8" opacity=".1"/><circle cx="4" cy="5" r=".4" fill="#ebdbe8" opacity=".05"/></pattern>
     <clipPath id="window"><path d="M623 109h295v451H623z"/></clipPath>
   </defs>
@@ -27,11 +27,21 @@
   <text x="75" y="436" fill="#c0b5cc" font-family="monospace" font-size="10" letter-spacing="2.9">SOME ECHOES STAY.</text>
   <g stroke="#bba6c8" stroke-opacity=".18"><ellipse cx="356" cy="566" rx="200" ry="27"/><ellipse cx="356" cy="566" rx="153" ry="19"/><ellipse cx="356" cy="566" rx="108" ry="12"/><ellipse cx="171" cy="621" rx="91" ry="12"/><ellipse cx="171" cy="621" rx="56" ry="6"/></g>
   <path d="m356 465 0 88" stroke="#d4b9d4" stroke-opacity=".24"/><ellipse cx="356" cy="554" rx="3" ry="5" fill="#d4b9d4" fill-opacity=".55"/>
-  <circle cx="760" cy="620" r="157" stroke="#a895b9" stroke-opacity=".42" stroke-width="12"/><circle cx="760" cy="620" r="145" fill="url(#vinyl)"/>
-  <g stroke="#bdb6d4" stroke-opacity=".13"><circle cx="760" cy="620" r="136"/><circle cx="760" cy="620" r="127"/><circle cx="760" cy="620" r="118"/><circle cx="760" cy="620" r="109"/><circle cx="760" cy="620" r="100"/><circle cx="760" cy="620" r="91"/><circle cx="760" cy="620" r="82"/><circle cx="760" cy="620" r="73"/></g>
-  <circle cx="760" cy="620" r="145" fill="url(#sheen)"/><circle cx="760" cy="620" r="43" fill="#c4b1c6"/><circle cx="760" cy="620" r="35" stroke="#5d526f" stroke-opacity=".4"/>
-  <text x="760" y="610" text-anchor="middle" fill="#4a415b" font-family="Georgia,serif" font-size="11" font-style="italic">refrain.</text>
-  <circle cx="760" cy="620" r="5" fill="#202330"/><text x="760" y="639" text-anchor="middle" fill="#50455f" font-family="monospace" font-size="6" letter-spacing="1.7">B / 33⅓</text>
+  <!-- record-vinyl:start -->
+  <g id="record-vinyl" data-center="709 463" data-outer-radius="240">
+    <circle cx="709" cy="463" r="240" fill="#756683"/>
+    <circle cx="709" cy="463" r="228" stroke="#cbb9d4" stroke-opacity=".52"/>
+    <circle cx="709" cy="463" r="208" fill="url(#vinyl)"/>
+    <g stroke="#cbb9d4" stroke-opacity=".13"><circle cx="709" cy="463" r="198" /><circle cx="709" cy="463" r="187" /><circle cx="709" cy="463" r="176" /><circle cx="709" cy="463" r="165" /><circle cx="709" cy="463" r="154" /><circle cx="709" cy="463" r="143" /><circle cx="709" cy="463" r="132" /><circle cx="709" cy="463" r="121" /><circle cx="709" cy="463" r="110" /><circle cx="709" cy="463" r="99" /></g>
+    <circle cx="709" cy="463" r="208" fill="url(#sheen)"/>
+    <circle cx="709" cy="463" r="65" fill="#c4b1c6"/>
+    <circle cx="709" cy="463" r="57" stroke="#4a415b" stroke-opacity=".35"/>
+    <text x="709" y="449" text-anchor="middle" fill="#4a415b" font-family="Georgia,serif" font-size="17" font-style="italic">refrain.</text>
+    <circle cx="709" cy="463" r="6" fill="#252329"/>
+    <text x="709" y="490" text-anchor="middle" fill="#4a415b" font-family="monospace" font-size="7" letter-spacing="1.7">B / 33⅓ RPM</text>
+  </g>
+  <!-- record-vinyl:end -->
+  <text x="954" y="720" text-anchor="end" fill="#b9adc7" font-family="monospace" font-size="10" letter-spacing="2">06 COLUMNS / SIDE B</text>
   <text x="73" y="685" fill="#e1d4e1" font-family="Georgia,serif" font-size="28" font-style="italic">The Afterglow</text>
   <text x="74" y="712" fill="#b5aac5" font-family="monospace" font-size="9" letter-spacing="2.1">MUSIC / PHOTOGRAPHS / PASSING DAYS</text>
   <text x="44" y="777" fill="#b9adc7" font-family="monospace" font-size="10" letter-spacing="1.6">INSPIRED BY X JAPAN · ENDLESS RAIN</text>

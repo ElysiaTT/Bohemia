@@ -8,7 +8,7 @@ import '../../styles/studio.css';
 const configuration = { repository, base: withBase(), index: withBase('studio/posts.json'), columns: recordSides.flatMap(side => side.tracks.map(track => ({ slug: track.slug, title: track.title, side: side.side }))) };
 const credentialUrl = `https://github.com/settings/personal-access-tokens/new?${new URLSearchParams({ name: 'Bohemia writing room', description: 'Publish articles to Bohemia', target_name: repository.owner, expires_in: '30', contents: 'write' })}`;
 ---
-<Base title="写作台" description="在 Bohemia 写作、预览并发布你的下一篇文章。" noindex>
+<Base title="写作台" description="在 bohemia's rain 写作、预览并发布你的下一篇文章。" noindex>
   <div class="studio-page wrap" id="writing-room" data-view="split">
     <header class="studio-heading">
       <div><p class="eyebrow">THE WRITING ROOM <span aria-hidden="true">/</span> BOHEMIA</p><h1>让新的声音，落在纸上<span>。</span></h1><p>写一篇新的，或让旧文字继续生长。</p></div>

@@ -50,7 +50,7 @@ const active = (path: string) => Astro.url.pathname.startsWith(withBase(path)) |
     <header class="site-header wrap">
       <a class="brand" href={withBase()} aria-label={`${site.title} 首页`}>
         <span class="brand-icon" aria-hidden="true"><svg width="31" height="31" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="13" stroke="currentColor" stroke-width="1.7" /><circle cx="16" cy="16" r="9" stroke="currentColor" stroke-width=".8" /><circle cx="16" cy="16" r="4" fill="currentColor" /><circle cx="16" cy="16" r="1.2" fill="var(--paper)" /></svg></span>
-        <span class="wordmark">{site.title}<span class="brand-period">.</span></span>
+        <span class="wordmark">{site.title}</span>
       </a>
       <span class="brand-note">{site.subtitle}</span>
       <nav class="desktop-nav" aria-label="主导航">
@@ -66,7 +66,7 @@ const active = (path: string) => Astro.url.pathname.startsWith(withBase(path)) |
     <nav class="mobile-nav wrap" id="mobile-nav" aria-label="移动端导航" hidden>{nav.map(([path, label]) => <a aria-current={active(path) ? 'page' : undefined} href={withBase(path)}>{label}<Icon name="diagonal" size={15} /></a>)}</nav>
     <main id="main"><slot /></main>
     <footer class="site-footer wrap">
-      <div class="footer-top"><a href={withBase()} class="footer-brand">{site.title}<span>.</span></a><p>{site.subtitle}</p><a class="back-top" href="#top" aria-label="回到页面顶部">回到顶部 <span aria-hidden="true">↑</span></a></div>
+      <div class="footer-top"><a href={withBase()} class="footer-brand">{site.title}</a><p>{site.subtitle}</p><a class="back-top" href="#top" aria-label="回到页面顶部">回到顶部 <span aria-hidden="true">↑</span></a></div>
       <div class="footer-bottom"><span>© {new Date().getFullYear()} {site.author} <span class="footer-dot">·</span> Written in my own key.</span><div>{site.github && <a href={site.github} target="_blank" rel="noopener noreferrer">GitHub <Icon name="diagonal" size={12} /></a>}<a href={withBase('rss.xml')}>RSS <Icon name="rss" size={13} /></a><a href={withBase('studio/')}>写作台 <Icon name="diagonal" size={12} /></a><a href={withBase('about/#colophon')}>关于本站 <Icon name="diagonal" size={12} /></a></div></div>
     </footer>
     <dialog class="search-dialog" id="search-dialog" aria-labelledby="search-title" data-index={withBase('search.json')}>
