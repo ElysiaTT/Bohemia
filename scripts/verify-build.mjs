@@ -91,6 +91,9 @@ const backPanel = home.match(/<section[^>]*data-record-panel="side-b"[^>]*>/)?.[
 if (!backPanel.includes('inert') || !backPanel.includes('aria-hidden="true"')) errors.push('Inactive Side B must be inert and hidden from assistive technology');
 const studio = readFileSync(resolve(root, 'studio/index.html'), 'utf8');
 if (!studio.includes('noindex, follow') || !studio.includes('id="studio-form"') || !studio.includes('id="studio-auth"')) errors.push('Writing room must include the editor, authentication dialog and noindex directive');
+for (const id of ['studio-management', 'studio-document-status', 'studio-unpublish', 'studio-republish', 'studio-delete-article', 'studio-delete-draft', 'studio-confirm', 'studio-confirm-input']) {
+  if (!studio.includes(`id="${id}"`)) errors.push(`Writing room is missing article management control: ${id}`);
+}
 if (!home.includes(`${base}/studio/`)) errors.push('Home must link to the writing room');
 const studioPosts = JSON.parse(readFileSync(resolve(root, 'studio/posts.json'), 'utf8'));
 if (studioPosts.length !== index.length) errors.push('Writing room snapshot must include exactly the public posts');

@@ -92,6 +92,15 @@ export function serializeArticle(values: ArticleValues, originalSource?: string)
   return `---\n${document.toString({ lineWidth: 0 })}---\n\n${values.body.replaceAll('\r\n', '\n').trimEnd()}\n`;
 }
 
+/** A visibility change never includes unsaved editor content. */
+export function setArticleDraft(source: string, draft: boolean) {
+  const normalized = source.replace(/^\uFEFF/, '').replaceAll('\r\n', '\n');
+  const match = normalized.match(/^---[ \t]*\n([\s\S]*?)\n---[ \t]*(?:\n|$)/);
+  const { document } = frontmatter(source);
+  document.set('draft', draft);
+  return `---\n${document.toString({ lineWidth: 0 })}---\n${normalized.slice(match![0].length)}`;
+}
+
 export function decodeBase64(value: string) {
   return new TextDecoder().decode(Uint8Array.from(atob(value.replace(/\s/g, '')), character => character.charCodeAt(0)));
 }

@@ -1,9 +1,11 @@
-import { articlePath, decodeBase64, isArticlePath, serializeArticle, validateArticle, validCoverPath } from './studio-content.ts';
+import { articlePath, decodeBase64, isArticlePath, parseArticle, serializeArticle, setArticleDraft, validateArticle, validCoverPath } from './studio-content.ts';
 import type { ArticleDraft } from './studio-content.ts';
 
 export interface StudioRepository { owner: string; repo: string; branch: string }
 export interface RepositoryFile { path: string; sha: string }
 interface Tree { sha: string; truncated?: boolean; tree: Array<{ path: string; sha: string; type: string; mode: string }> }
+interface TreeChange { path: string; mode: string; type: string; sha: string | null }
+export interface ArticleReference { path: string; baseSha: string }
 type RequestFetch = (input: string, init?: RequestInit) => Promise<Response>;
 export class RepositoryConflict extends Error {}
 
@@ -25,7 +27,7 @@ export class StudioGitHub {
     const { owner, repo } = this.repository;
     const response = await this.transport(`https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}${path}`, {
       method, headers: { Authorization: `Bearer ${this.token}`, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2026-03-10', ...(body ? { 'Content-Type': 'application/json' } : {}) },
-      ...(body ? { body: JSON.stringify(body) } : {}), signal: AbortSignal.timeout(30_000), credentials: 'omit', redirect: 'error',
+      ...(body ? { body: JSON.stringify(body) } : {}), signal: AbortSignal.timeout(30_000), credentials: 'omit', redirect: 'error', cache: 'no-store',
     });
     if (!response.ok) {
       if (response.status === 401) throw new Error('GitHub 凭据无效或已过期，请重新连接。');
@@ -42,15 +44,58 @@ export class StudioGitHub {
     return this.list();
   }
   async list(): Promise<RepositoryFile[]> {
-    const tree = await this.request<Tree>(`/git/trees/${encodeURIComponent(this.repository.branch)}?recursive=1`);
+    const state = await this.branchState();
+    const tree = await this.request<Tree>(`/git/trees/${state.treeSha}?recursive=1`);
     if (tree.truncated) throw new Error('仓库文章目录过大，无法完整载入。请通过 GitHub 编辑。');
     return tree.tree.filter(file => file.type === 'blob' && /^(100644|100755)$/.test(file.mode) && isArticlePath(file.path)).map(({ path, sha }) => ({ path, sha }));
   }
   async read(path: string) {
     if (!isArticlePath(path)) throw new Error('只能编辑博客文章目录中的 Markdown 文件。');
-    const file = await this.request<{ content: string; sha: string; encoding: string }>(`/contents/${path.split('/').map(encodeURIComponent).join('/')}?ref=${encodeURIComponent(this.repository.branch)}`);
+    const branch = this.repository.branch.split('/').map(encodeURIComponent).join('/');
+    const head = await this.request<{ object: { sha: string } }>(`/git/ref/heads/${branch}`);
+    const file = await this.request<{ content: string; sha: string; encoding: string }>(`/contents/${path.split('/').map(encodeURIComponent).join('/')}?ref=${head.object.sha}`);
     if (file.encoding !== 'base64') throw new Error('文章超过在线编辑支持的大小。');
     return { source: decodeBase64(file.content), sha: file.sha };
+  }
+  private async branchState() {
+    const branch = this.repository.branch.split('/').map(encodeURIComponent).join('/');
+    const head = await this.request<{ object: { sha: string } }>(`/git/ref/heads/${branch}`);
+    const commit = await this.request<{ tree: { sha: string } }>(`/git/commits/${head.object.sha}`);
+    return { branch, headSha: head.object.sha, treeSha: commit.tree.sha };
+  }
+  private async articleState(reference: ArticleReference) {
+    if (!isArticlePath(reference.path) || !reference.baseSha) throw new Error('请先载入要管理的仓库文章。');
+    const state = await this.branchState();
+    const tree = await this.request<Tree>(`/git/trees/${state.treeSha}?recursive=1`);
+    if (tree.truncated) throw new Error('无法完整检查仓库，本次没有修改。');
+    const current = tree.tree.find(file => file.path === reference.path);
+    if (!current || current.type !== 'blob' || !/^(100644|100755)$/.test(current.mode) || current.sha !== reference.baseSha) throw new RepositoryConflict('文章已被其他编辑更新或移除。请先载入仓库最新版，再重新确认操作。');
+    return { ...state, current };
+  }
+  private async commitChanges(state: { branch: string; headSha: string; treeSha: string }, changes: TreeChange[], message: string) {
+    const tree = await this.request<{ sha: string }>('/git/trees', 'POST', { base_tree: state.treeSha, tree: changes });
+    const commit = await this.request<{ sha: string }>('/git/commits', 'POST', { message, tree: tree.sha, parents: [state.headSha] });
+    await this.request(`/git/refs/heads/${state.branch}`, 'PATCH', { sha: commit.sha, force: false });
+    return commit.sha;
+  }
+  async unpublish(reference: ArticleReference) {
+    const state = await this.articleState(reference);
+    const blob = await this.request<{ content: string; encoding: string }>(`/git/blobs/${state.current.sha}`);
+    if (blob.encoding !== 'base64') throw new Error('无法读取文章原文，本次没有撤下。');
+    const original = decodeBase64(blob.content);
+    const slug = reference.path.slice('src/content/posts/'.length, -3);
+    const values = parseArticle(original, slug);
+    if (values.draft) return { path: reference.path, source: original, blobSha: state.current.sha, commitSha: state.headSha, changed: false };
+    const source = setArticleDraft(original, true);
+    const nextBlob = await this.request<{ sha: string }>('/git/blobs', 'POST', { content: source, encoding: 'utf-8' });
+    const commitSha = await this.commitChanges(state, [{ path: reference.path, mode: state.current.mode, type: 'blob', sha: nextBlob.sha }], `Unpublish article: ${values.title}`);
+    return { path: reference.path, source, blobSha: nextBlob.sha, commitSha, changed: true };
+  }
+  async deleteArticle(reference: ArticleReference, confirmedSlug: string) {
+    if (!isArticlePath(reference.path) || articlePath(confirmedSlug.trim()) !== reference.path) throw new Error('输入的文章地址与要删除的文章不一致。');
+    const state = await this.articleState(reference);
+    const commitSha = await this.commitChanges(state, [{ path: reference.path, mode: state.current.mode, type: 'blob', sha: null }], `Delete article: ${confirmedSlug.trim()}`);
+    return { path: reference.path, commitSha };
   }
   async publish(draft: ArticleDraft) {
     const errors = validateArticle(draft.values, this.columns);

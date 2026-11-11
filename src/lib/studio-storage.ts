@@ -31,3 +31,17 @@ export async function storeDraft(draft: ArticleDraft) {
     transaction.onabort = () => reject(new Error('本机草稿未保存，请下载 Markdown 备份后继续。'));
   });
 }
+
+export async function deleteDraft(id: string) {
+  const db = await open();
+  return new Promise<void>((resolve, reject) => {
+    const transaction = db.transaction(['drafts', 'preferences'], 'readwrite');
+    transaction.objectStore('drafts').delete(id);
+    const preferences = transaction.objectStore('preferences');
+    const last = preferences.get('last');
+    last.onsuccess = () => { if (last.result === id) preferences.delete('last'); };
+    transaction.oncomplete = () => resolve();
+    transaction.onerror = () => reject(new Error('本机草稿未能移除，请稍后重试。'));
+    transaction.onabort = () => reject(new Error('本机草稿未能移除，请稍后重试。'));
+  });
+}

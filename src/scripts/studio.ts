@@ -4,7 +4,7 @@ import { articlePath, emptyArticle, parseArticle, serializeArticle, validateArti
 import type { ArticleDraft, ArticleValues, PublishedArticle } from '../lib/studio-content';
 import { StudioGitHub } from '../lib/studio-github';
 import type { RepositoryFile, StudioRepository } from '../lib/studio-github';
-import { readDrafts, storeDraft } from '../lib/studio-storage';
+import { deleteDraft, readDrafts, storeDraft } from '../lib/studio-storage';
 import { articleHeadingDepth } from '../lib/article-headings';
 
 type Configuration = { repository: StudioRepository; base: string; index: string; columns: Array<{ slug: string; title: string; side: string }> };
@@ -25,6 +25,15 @@ const previewBody = document.querySelector<HTMLElement>('#studio-preview-body')!
 const snapshotPosts = new Map<string, PublishedArticle>();
 const drafts = new Map<string, ArticleDraft>();
 const remoteTitles = new Map<string, string>();
+const repositoryValues = new Map<string, ArticleValues>();
+const deletedPaths = new Set<string>();
+const management = document.querySelector<HTMLDetailsElement>('#studio-management')!;
+const confirmDialog = document.querySelector<HTMLDialogElement>('#studio-confirm')!;
+const confirmInput = document.querySelector<HTMLInputElement>('#studio-confirm-input')!;
+const confirmSubmit = document.querySelector<HTMLButtonElement>('#studio-confirm-submit')!;
+const confirmCancel = document.querySelector<HTMLButtonElement>('#studio-confirm-cancel')!;
+type ManagementAction = 'unpublish' | 'delete-article' | 'delete-draft';
+let pendingManagement: { action: ManagementAction; id: string; path?: string; baseSha?: string; slug: string } | undefined;
 let remoteFiles: RepositoryFile[] = [];
 let client: StudioGitHub | undefined;
 let current = newDraft();
@@ -62,6 +71,39 @@ function setPublishLabel() {
   publishButton.replaceChildren(document.createTextNode(current.values.draft ? '保存仓库草稿 ' : '发布到博客 '), makeText('span', '↗'));
   publishButton.lastElementChild?.setAttribute('aria-hidden', 'true');
 }
+function setArticleQuery(slug?: string) {
+  const url = new URL(location.href);
+  if (slug) url.searchParams.set('post', slug); else url.searchParams.delete('post');
+  history.replaceState(null, '', url);
+}
+function renderManagement() {
+  const source = current.sourcePath;
+  if (source && current.originalSource && !repositoryValues.has(source)) {
+    try { repositoryValues.set(source, parseArticle(current.originalSource, source.slice('src/content/posts/'.length, -3))); } catch { /* An unreadable local backup never changes the repository. */ }
+  }
+  const known = source ? repositoryValues.get(source) : undefined;
+  const status = document.querySelector<HTMLElement>('#studio-document-status')!;
+  status.textContent = !source ? '本机草稿' : !known ? '仓库文章' : known.draft ? '仓库草稿' : known.demo ? '已发布 · 示例' : '已发布';
+  status.dataset.state = !source ? 'local' : known?.draft ? 'draft' : 'published';
+  document.querySelector('#studio-document-hint')!.textContent = source ? client ? '修改先保存在本机，发布后更新博客。' : '连接 GitHub 后可发布、撤下或删除。' : '先写下来，再决定何时发布。';
+  document.querySelector<HTMLElement>('#studio-unpublish')!.hidden = !source || known?.draft === true;
+  document.querySelector<HTMLElement>('#studio-republish')!.hidden = !source || known?.draft !== true;
+  document.querySelector<HTMLElement>('#studio-delete-article')!.hidden = !source;
+  document.querySelector<HTMLButtonElement>('#studio-delete-draft')!.disabled = !drafts.has(current.id);
+  const view = document.querySelector<HTMLAnchorElement>('#studio-open-article')!;
+  view.hidden = !source || known?.draft === true;
+  if (source) view.href = `${configuration.base}posts/${source.slice('src/content/posts/'.length, -3)}/`;
+}
+function setBusy(value: boolean) {
+  busy = value; fieldset.disabled = value; publishButton.disabled = value;
+  document.querySelector('.studio-library')!.toggleAttribute('inert', value);
+  document.querySelector('.studio-document-bar')!.toggleAttribute('inert', value);
+  for (const selector of ['#studio-export', '#studio-save', '#studio-connect', '#studio-reload']) document.querySelector<HTMLButtonElement>(selector)!.disabled = value;
+}
+function deploymentLinks(commitSha: string) {
+  const repository = `https://github.com/${configuration.repository.owner}/${configuration.repository.repo}`;
+  return [{ text: '查看这次提交 ↗', url: `${repository}/commit/${commitSha}` }, { text: '查看发布进度 ↗', url: `${repository}/actions?query=branch%3A${encodeURIComponent(configuration.repository.branch)}` }];
+}
 function populate() {
   document.querySelector<HTMLElement>('#studio-message')!.hidden = true;
   for (const [name, value] of Object.entries(current.values)) {
@@ -78,15 +120,16 @@ function populate() {
 }
 function localForPath(path: string) { return [...drafts.values()].filter(draft => draft.sourcePath === path).sort((a, b) => b.savedAt.localeCompare(a.savedAt))[0]; }
 function renderLibrary() {
-  document.querySelector('#studio-post-count')!.textContent = String(client ? remoteFiles.length : snapshotPosts.size);
+  renderManagement();
+  document.querySelector('#studio-post-count')!.textContent = String(client ? remoteFiles.length : [...snapshotPosts.keys()].filter(path => !deletedPaths.has(path)).length);
   document.querySelector('#studio-draft-count')!.textContent = String(drafts.size);
   const term = librarySearch.value.trim().toLocaleLowerCase();
   const items = libraryMode === 'drafts'
     ? [...drafts.values()].sort((a, b) => b.savedAt.localeCompare(a.savedAt)).map(draft => ({ id: draft.id, path: draft.sourcePath, title: draft.values.title || '未命名的作品', note: `${new Date(draft.savedAt).toLocaleString('zh-CN', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })} · 本机草稿`, demo: draft.values.demo, draft }))
-    : (client ? remoteFiles : [...snapshotPosts.values()].map(post => ({ path: post.path, sha: post.sha }))).map(file => {
-      const snapshot = snapshotPosts.get(file.path);
-      const title = remoteTitles.get(file.path) || snapshot?.values.title || file.path.slice('src/content/posts/'.length, -3);
-      return { id: file.path, path: file.path, title, note: snapshot ? `${snapshot.values.date} · ${snapshot.values.category}` : '仓库文章 · 点击载入', demo: snapshot?.values.demo || false, draft: undefined };
+    : (client ? remoteFiles : [...snapshotPosts.values()].map(post => ({ path: post.path, sha: post.sha }))).filter(file => !deletedPaths.has(file.path)).map(file => {
+      const values = repositoryValues.get(file.path);
+      const title = remoteTitles.get(file.path) || values?.title || file.path.slice('src/content/posts/'.length, -3);
+      return { id: file.path, path: file.path, title, note: values ? `${values.draft ? '仓库草稿' : '已发布'} · ${values.date} · ${values.category}` : '仓库文章 · 点击载入', demo: values?.demo || false, draft: undefined };
     });
   const filtered = items.filter(item => `${item.title} ${item.path || ''}`.toLocaleLowerCase().includes(term));
   library.replaceChildren();
@@ -101,7 +144,7 @@ function renderLibrary() {
     button.addEventListener('click', async () => {
       if (busy) return;
       await saveIfChanged();
-      if (item.draft) { loadVersion++; current = structuredClone(item.draft); populate(); saveState.textContent = '已恢复本机草稿。'; }
+      if (item.draft) { loadVersion++; current = structuredClone(item.draft); setArticleQuery(); populate(); saveState.textContent = '已恢复本机草稿。'; }
       else if (item.path) await openPost(item.path);
     });
     library.append(button);
@@ -155,7 +198,7 @@ function renderPreview() {
 async function openPost(path: string, fresh = false) {
   const version = ++loadVersion;
   const local = localForPath(path);
-  if (local && !fresh) { current = structuredClone(local); populate(); saveState.textContent = '已恢复这篇文章的本机草稿。'; return; }
+  if (local && !fresh) { current = structuredClone(local); setArticleQuery(current.values.slug); populate(); saveState.textContent = '已恢复这篇文章的本机草稿。'; return; }
   if (fresh && !client) { authDialog.showModal(); return; }
   saveState.textContent = '正在载入文章…';
   try {
@@ -174,7 +217,7 @@ async function openPost(path: string, fresh = false) {
       drafts.set(backup.id, backup); await storeDraft(backup);
     }
     if (version !== loadVersion) return;
-    current = next; remoteTitles.set(path, next.values.title); populate();
+    current = next; setArticleQuery(current.values.slug); remoteTitles.set(path, next.values.title); repositoryValues.set(path, structuredClone(next.values)); populate();
     if (fresh) { await saveCurrent(); announce('已载入仓库最新版。之前的本机版本已另存为草稿，可以在左侧切换查看。'); }
     else saveState.textContent = '已载入文章，编辑后会自动保存到本机。';
   } catch (error) { if (version === loadVersion) { saveState.textContent = '未能载入文章，当前文字保持不变。'; announce(error instanceof Error ? error.message : '文章载入失败，请稍后重试。'); } }
@@ -191,7 +234,7 @@ form.addEventListener('input', event => {
 });
 document.querySelector('#studio-new')!.addEventListener('click', async () => {
   if (busy) return;
-  loadVersion++; await saveIfChanged(); current = newDraft(); populate(); saveState.textContent = '新的一页，等你落笔。'; field('title').focus();
+  loadVersion++; await saveIfChanged(); current = newDraft(); setArticleQuery(); populate(); saveState.textContent = '新的一页，等你落笔。'; field('title').focus();
 });
 document.querySelector('#studio-save')!.addEventListener('click', () => { changed = true; void saveCurrent(); });
 librarySearch.addEventListener('input', renderLibrary);
@@ -247,7 +290,7 @@ document.querySelector('#studio-export')!.addEventListener('click', async () => 
     announce(current.coverUpload ? 'Markdown 已下载。新选择的封面仍保存在本机草稿中，会在发布时一起上传。' : 'Markdown 已下载，你也可以继续在这里编辑和发布。');
   } catch { announce('Markdown 导出失败，请复制正文备份。'); }
 });
-document.addEventListener('keydown', event => { if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 's') { event.preventDefault(); void saveCurrent(); } });
+document.addEventListener('keydown', event => { if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 's') { event.preventDefault(); if (!busy) void saveCurrent(); } });
 addEventListener('beforeunload', event => { if (unsaved || busy) event.preventDefault(); });
 
 function updateConnection() {
@@ -294,46 +337,136 @@ publishButton.addEventListener('click', async () => {
   const errors = validateArticle(current.values, columns);
   if (errors.length) { announce(errors.join(' ')); form.reportValidity(); return; }
   if (!client) { await saveCurrent(); authDialog.showModal(); tokenField.focus(); return; }
-  busy = true; fieldset.disabled = true; publishButton.disabled = true;
-  document.querySelector('.studio-library')!.setAttribute('inert', '');
-  document.querySelector<HTMLButtonElement>('#studio-export')!.disabled = true;
-  document.querySelector<HTMLButtonElement>('#studio-save')!.disabled = true;
+  setBusy(true);
   saveState.textContent = '正在提交文章与封面…';
   try {
     await saveCurrent();
     const result = await client.publish(structuredClone(current));
     current.sourcePath = result.path; current.baseSha = result.blobSha; current.originalSource = result.source;
+    deletedPaths.delete(result.path); repositoryValues.set(result.path, structuredClone(current.values));
+    snapshotPosts.set(result.path, { path: result.path, sha: result.blobSha, values: structuredClone(current.values) });
     delete current.coverUpload; remoteTitles.set(result.path, current.values.title);
     remoteFiles = [{ path: result.path, sha: result.blobSha }, ...remoteFiles.filter(file => file.path !== result.path)];
     (field('slug') as HTMLInputElement).readOnly = true;
     document.querySelector('#studio-slug-hint')!.textContent = '这篇文章的地址已固定，编辑内容不会改变原有链接。';
     document.querySelector<HTMLElement>('#studio-reload')!.hidden = false;
     await saveCurrent(); renderLibrary();
-    const repository = `https://github.com/${configuration.repository.owner}/${configuration.repository.repo}`;
-    const links = [{ text: '查看这次提交 ↗', url: `${repository}/commit/${result.commitSha}` }];
-    if (!current.values.draft) links.push({ text: '查看发布进度 ↗', url: `${repository}/actions?query=branch%3A${encodeURIComponent(configuration.repository.branch)}` }, { text: '打开文章（部署后生效）↗', url: `${location.origin}${configuration.base}posts/${current.values.slug}/` });
+    const links = deploymentLinks(result.commitSha);
+    if (!current.values.draft) links.push({ text: '打开文章（部署后生效）↗', url: `${location.origin}${configuration.base}posts/${current.values.slug}/` });
     announce(current.values.draft ? '仓库草稿已保存，未显示在博客。以后连接 GitHub 后可以从文章库继续编辑。' : '文章与封面已一起提交到 GitHub，博客正在自动部署。部署完成后，专栏、搜索和 RSS 会随之更新。', links);
   } catch (error) {
     const retained = unsaved ? '当前文字仍在页面中，请导出 Markdown 备份。' : '本机草稿已保留。';
     saveState.textContent = retained;
     announce((error instanceof Error && !['TypeError', 'TimeoutError', 'AbortError'].includes(error.name) ? error.message : '连接中断，提交结果还未确认。请先查看 GitHub 的文章或提交记录，再重试。') + ' ' + retained);
   } finally {
-    busy = false; fieldset.disabled = false; publishButton.disabled = false;
-    document.querySelector('.studio-library')!.removeAttribute('inert');
-    document.querySelector<HTMLButtonElement>('#studio-export')!.disabled = false;
-    document.querySelector<HTMLButtonElement>('#studio-save')!.disabled = false;
+    setBusy(false);
     setPublishLabel();
+  }
+});
+
+async function requestManagement(action: ManagementAction) {
+  if (busy) return;
+  const id = current.id;
+  management.open = false;
+  if (action !== 'delete-draft' && !client) { authDialog.showModal(); tokenField.focus(); return; }
+  await saveIfChanged();
+  if (current.id !== id || busy) return;
+  if (action === 'delete-draft' && !drafts.has(id)) { announce('这是一张新的空白页，还没有可移除的本机草稿。'); return; }
+  if (action !== 'delete-draft' && (!current.sourcePath || !current.baseSha)) { announce('请先从左侧载入要管理的仓库文章。'); return; }
+  const slug = current.sourcePath ? current.sourcePath.slice('src/content/posts/'.length, -3) : current.values.slug;
+  pendingManagement = { action, id, path: current.sourcePath, baseSha: current.baseSha, slug };
+  const copy = {
+    unpublish: { title: '从博客撤下这篇文章？', description: '将已提交的文章改为仓库草稿。部署完成后，它会从博客、专栏、搜索和 RSS 中移除；之后可以再次发布。', note: '只修改仓库版本的发布状态，本机尚未发布的修改继续保留。公开仓库中的草稿文件仍可在 GitHub 查看。', submit: '确认撤下' },
+    'delete-article': { title: '删除这篇仓库文章？', description: '将文章文件从仓库当前版本移除。部署完成后，原文章链接将失效，博客中的相关入口也会移除。', note: '图片与 Git 历史保留；本机草稿保留为可编辑备份。仅想暂时隐藏文章时，可以取消并选择“从博客撤下”。', submit: '确认删除文章' },
+    'delete-draft': { title: '移除这份本机草稿？', description: '将当前草稿及尚未上传的封面从这个浏览器中移除。此操作无法从写作台撤销，可先取消并导出 Markdown。', note: '只清理这一份本机草稿，GitHub 仓库中的文章与图片保持原样。', submit: '移除本机草稿' },
+  }[action];
+  document.querySelector('#studio-confirm-title')!.textContent = copy.title;
+  document.querySelector('#studio-confirm-article')!.textContent = `${current.values.title || '未命名的作品'}${slug ? ` / ${slug}` : ''}`;
+  document.querySelector('#studio-confirm-description')!.textContent = copy.description;
+  document.querySelector('#studio-confirm-note')!.textContent = copy.note;
+  document.querySelector('#studio-confirm-status')!.textContent = '';
+  document.querySelector('#studio-confirm-slug')!.textContent = slug;
+  document.querySelector<HTMLElement>('#studio-confirm-input-wrap')!.hidden = action !== 'delete-article';
+  confirmInput.value = ''; confirmSubmit.textContent = copy.submit;
+  confirmSubmit.classList.toggle('studio-danger', action === 'delete-article');
+  confirmSubmit.disabled = action === 'delete-article';
+  confirmDialog.showModal(); confirmCancel.focus();
+}
+for (const action of ['unpublish', 'delete-article', 'delete-draft'] as const) document.querySelector(`#studio-${action}`)!.addEventListener('click', () => { void requestManagement(action); });
+document.querySelector('#studio-republish')!.addEventListener('click', () => {
+  if (busy) return;
+  management.open = false;
+  (field('draft') as HTMLInputElement).checked = false;
+  field('draft').dispatchEvent(new Event('input', { bubbles: true }));
+  publishButton.click();
+});
+confirmInput.addEventListener('input', () => { if (!busy) confirmSubmit.disabled = pendingManagement?.action === 'delete-article' && confirmInput.value.trim() !== pendingManagement.slug; });
+confirmCancel.addEventListener('click', () => { if (!busy) confirmDialog.close(); });
+confirmDialog.addEventListener('cancel', event => { if (busy) event.preventDefault(); });
+confirmDialog.addEventListener('close', () => { pendingManagement = undefined; confirmInput.value = ''; });
+document.querySelector('#studio-confirm-form')!.addEventListener('submit', async event => {
+  event.preventDefault();
+  const target = pendingManagement;
+  if (busy || !target || target.id !== current.id) return;
+  if (target.action === 'delete-article' && confirmInput.value.trim() !== target.slug) return;
+  setBusy(true); loadVersion++; confirmSubmit.disabled = true; confirmCancel.disabled = true; confirmInput.disabled = true;
+  const status = document.querySelector('#studio-confirm-status')!;
+  status.textContent = '正在处理，请稍候…';
+  try {
+    await saveQueue;
+    if (target.action === 'delete-draft') {
+      await deleteDraft(target.id); drafts.delete(target.id);
+      current = newDraft(); setArticleQuery(); populate();
+      saveState.textContent = '本机草稿已移除。';
+      confirmDialog.close(); announce('已移除这份本机草稿，仓库内容保持原样。');
+    } else {
+      if (!client || current.sourcePath !== target.path || current.baseSha !== target.baseSha) throw new Error('文章或 GitHub 连接已改变，请关闭弹窗后重新确认。');
+      await saveCurrent();
+      if (unsaved) throw new Error('本机备份尚未保存成功，请先导出 Markdown，再重试管理操作。');
+      const reference = { path: target.path!, baseSha: target.baseSha! };
+      if (target.action === 'unpublish') {
+        const result = await client.unpublish(reference);
+        const values = parseArticle(result.source, target.slug);
+        repositoryValues.set(result.path, values);
+        snapshotPosts.set(result.path, { path: result.path, sha: result.blobSha, values: structuredClone(values) });
+        current.baseSha = result.blobSha; current.originalSource = result.source; current.values.draft = true;
+        (field('draft') as HTMLInputElement).checked = true;
+        remoteFiles = remoteFiles.map(file => file.path === result.path ? { path: file.path, sha: result.blobSha } : file);
+        setPublishLabel(); renderPreview(); await saveCurrent();
+        confirmDialog.close();
+        announce(result.changed ? '已提交撤下操作。部署完成后文章将不再显示在博客；可在写作台中继续编辑，取消“仅作为仓库草稿”后重新发布。' : '这篇文章已是仓库草稿，本次无需再次修改。', deploymentLinks(result.commitSha));
+      } else {
+        const result = await client.deleteArticle(reference, confirmInput.value);
+        deletedPaths.add(result.path); snapshotPosts.delete(result.path); repositoryValues.delete(result.path); remoteTitles.delete(result.path);
+        remoteFiles = remoteFiles.filter(file => file.path !== result.path);
+        const copies = [...drafts.values()].filter(draft => draft.sourcePath === result.path).map(draft => {
+          const copy = structuredClone(draft); delete copy.sourcePath; delete copy.baseSha;
+          copy.savedAt = new Date().toISOString(); drafts.set(copy.id, copy); return copy;
+        });
+        const backup = copies.find(draft => draft.id === current.id)!;
+        const storage = await Promise.allSettled(copies.filter(draft => draft.id !== current.id).map(storeDraft));
+        current = backup; setArticleQuery(); populate(); await saveCurrent();
+        confirmDialog.close();
+        announce(`文章已从仓库当前版本删除，正在自动部署。本机草稿已保留，图片和 Git 历史仍在。${storage.some(result => result.status === 'rejected') || unsaved ? '部分本机备份信息未能更新，请导出 Markdown 备份。' : ''}`, deploymentLinks(result.commitSha));
+      }
+    }
+  } catch (error) {
+    status.textContent = error instanceof Error && !['TypeError', 'TimeoutError', 'AbortError'].includes(error.name) ? error.message : '连接中断，操作结果尚未确认。请先查看 GitHub 提交记录，再重试；本机文字仍保留。';
+  } finally {
+    setBusy(false); confirmCancel.disabled = false; confirmInput.disabled = false;
+    confirmSubmit.disabled = target.action === 'delete-article' && confirmInput.value.trim() !== target.slug;
+    renderLibrary();
   }
 });
 
 async function initialize() {
   populate();
   const results = await Promise.allSettled([
-    fetch(configuration.index).then(async response => { if (!response.ok) throw new Error('文章列表暂时无法载入。'); return response.json() as Promise<PublishedArticle[]>; }),
+    fetch(configuration.index, { cache: 'no-store' }).then(async response => { if (!response.ok) throw new Error('文章列表暂时无法载入。'); return response.json() as Promise<PublishedArticle[]>; }),
     readDrafts(),
   ]);
   const postsResult = results[0]; const draftsResult = results[1];
-  if (postsResult.status === 'fulfilled') for (const post of postsResult.value) snapshotPosts.set(post.path, post);
+  if (postsResult.status === 'fulfilled') for (const post of postsResult.value) { snapshotPosts.set(post.path, post); repositoryValues.set(post.path, structuredClone(post.values)); }
   else announce('已公开的文章列表暂时没有载入。你仍可以新建文章，或连接 GitHub 同步。');
   if (draftsResult.status === 'fulfilled') {
     for (const draft of draftsResult.value.drafts) drafts.set(draft.id, draft);

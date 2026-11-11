@@ -1,0 +1,48 @@
+{
+  "checked_on": "2026-11-11",
+  "feature": "Browser article management: edit, unpublish, republish and delete",
+  "type_check": {
+    "errors": 0,
+    "warnings": 0,
+    "hints": 0
+  },
+  "automated_tests": {
+    "passed": 19,
+    "failed": 0
+  },
+  "build": {
+    "html_pages": 15,
+    "local_references": 459,
+    "bases": [
+      "/",
+      "/Bohemia/"
+    ]
+  },
+  "static_markup": {
+    "unique_ids": true,
+    "no_nested_forms": true,
+    "dialog_labels_resolve": true,
+    "management_controls_present": true
+  },
+  "real_github_integration": {
+    "branch": "codex/studio-management-check-1794381707723",
+    "checks": {
+      "withdrawal_readback": true,
+      "republish_readback": true,
+      "deleted_only_target": true,
+      "other_articles_unchanged": true,
+      "shared_cover_preserved": true,
+      "main_unchanged": true
+    },
+    "withdraw_commit": "27979090bfce5dac599b650db7663080f6b1a5ea",
+    "republish_commit": "bb2ed78acda9032207e6f581bd2913a684416f94",
+    "delete_commit": "75358bffb647a5864171f28e146bf38ac7ddf191",
+    "temporary_branch_removed": true
+  },
+  "browser_visual_review": {
+    "status": "unavailable",
+    "reason": "Browser access host unavailable; no visual or native browser interaction verification in this change"
+  },
+  "public_content_changes": 0,
+  "target": "https://elysiatt.github.io/Bohemia/studio/"
+}
