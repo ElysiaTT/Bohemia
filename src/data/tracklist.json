@@ -8,6 +8,7 @@
     "tracks": [
       {
         "slug": "comfortably-uncertain",
+        "layoutPreviewPosts": ["the-first-step", "a-small-static-blog"],
         "title": "Comfortably Uncertain",
         "note": "机器学习基础、概率、不确定性、泛化与校准。",
         "inspiration": "Pink Floyd · Comfortably Numb"
@@ -65,6 +66,7 @@
     "tracks": [
       {
         "slug": "39-frames-later",
+        "layoutPreviewPosts": ["design-with-space", "a-walk-without-a-plan"],
         "title": "39 Frames Later",
         "note": "摄影、镜头、光线与被快门留住的瞬间。",
         "inspiration": "Queen · '39"

@@ -1,7 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
-import PostCard from '../components/PostCard.astro';
 import RecordShowcase from '../components/RecordShowcase.astro';
 import RecordTracklist from '../components/RecordTracklist.astro';
 import { recordSides } from '../lib/record';
@@ -10,7 +9,6 @@ import notes from '../data/notes.json';
 import { getPosts, withBase } from '../lib/posts';
 import '../styles/record.css';
 const posts = await getPosts();
-const latest = posts.slice(0, 4);
 const firstSide = recordSides[0];
 ---
 <Base>
@@ -32,7 +30,6 @@ const firstSide = recordSides[0];
       <section class="journal-main">
         <div class="section-heading"><div><span class="eyebrow">THE TRACKLIST</span><h2>正在播放<span class="section-period">.</span></h2></div><a class="text-link" href={withBase('writing/')}>全部文章 <Icon name="arrow" size={16} /></a></div>
         <RecordTracklist posts={posts} />
-        <section class="record-article-flow" aria-labelledby="article-flow-title"><header class="record-flow-heading"><h3 id="article-flow-title">文章更新</h3>{latest.every(post => post.data.demo) && <span class="demo-label">示例文章</span>}<span class="eyebrow">THE JOURNAL / LATEST ENTRIES</span></header><div class="post-grid">{latest.map((post, index) => <PostCard post={post} index={index} />)}</div></section>
         <a class="all-writing" href={withBase('writing/')}><span>还有一些想法，等你来翻。</span><span>浏览全部 {posts.length} 篇文章 <Icon name="arrow" size={17} /></span></a>
       </section>
       <aside class="journal-sidebar">

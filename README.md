@@ -14,6 +14,8 @@
 
 [Side A 专栏](docs/record-side-a-columns.jpg) · [Side B 专栏](docs/record-side-b-columns.jpg) · [Side B 封面](docs/record-side-b.jpg)
 
+[手机专栏排版](docs/columns-mobile.jpg) · [平板深色排版](docs/columns-tablet-dark.jpg)
+
 ## 本地运行
 
 推荐 Node.js 24 LTS。已在本机 Node.js 22.14.0 上通过构建与功能检查；当前字体工具的间接依赖会提示 Node.js 22.19.0 的引擎要求，安装新环境时请优先使用 Node.js 24。
@@ -65,6 +67,10 @@ npm run preview  # 预览已经构建的网站
 ### 将文章收入专栏
 
 14 个专栏及其说明统一保存在 `src/data/tracklist.json`。专栏是长期写作方向，不是已经发布的文章；没有文章的栏目显示「即将更新」，不会生成空链接。
+
+每个专栏横向占满内容区，标题与中文说明下展示最近最多 4 篇相关文章。桌面为两列图片卡片，手机为单列；「全部文章」链接进入该专栏归档。首页不再另列一份重复的文章卡片流。
+
+目前两面各一个专栏配置了 `layoutPreviewPosts`，使用现有示例文章演示排版，并显示「排版示例／不计入本专栏」说明。这些 ID 不会修改文章归属、生成专栏归档或计入正式文章数量；一旦该专栏有真实文章，排版示例会自动让位。其余空专栏继续显示「即将更新」。
 
 在真实文章的 frontmatter 中增加 `column: "wish-you-were-real"`（或其他栏目 slug），同时保持 `draft: false`、`demo: false`。构建会自动生成 `columns/wish-you-were-real/`，汇总该专栏所有已发布文章。未声明 `column` 的原有示例不会被强行归类；未知栏目 slug 会在内容检查时报告错误。
 

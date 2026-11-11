@@ -1,6 +1,7 @@
 ---
-import { recordSides, columnPosts } from '../lib/record';
+import { recordSides, columnPosts, columnLayoutExamples, COLUMN_ARTICLE_LIMIT } from '../lib/record';
 import { withBase, type Post } from '../lib/posts';
+import PostCard from './PostCard.astro';
 interface Props { posts: Post[] }
 const { posts } = Astro.props;
 ---
@@ -12,7 +13,17 @@ const { posts } = Astro.props;
       <ol class="record-columns">
         {side.tracks.map((track, trackIndex) => {
           const articles = columnPosts(posts, track.slug);
-          return <li class="record-column"><span class="record-column-number" aria-hidden="true">{String(trackIndex + 1).padStart(2, '0')}</span><div class="record-column-copy"><h4>{articles.length ? <a href={withBase(`columns/${track.slug}/`)}>{track.title}<span aria-hidden="true"> ↗</span></a> : track.title}</h4><p>{track.note}</p>{articles.length ? <span class="record-column-available">{articles.length} 篇文章</span> : <span class="record-column-upcoming">即将更新</span>}</div></li>;
+          const examples = articles.length ? [] : columnLayoutExamples(posts, track);
+          const displayed = articles.length ? articles.slice(0, COLUMN_ARTICLE_LIMIT) : examples;
+          return <li class="record-column" data-column={track.slug}>
+            <header class="record-column-header">
+              <span class="record-column-number" aria-hidden="true">{String(trackIndex + 1).padStart(2, '0')}</span>
+              <div class="record-column-copy"><h4 id={`column-${track.slug}`}>{articles.length ? <a href={withBase(`columns/${track.slug}/`)}>{track.title}</a> : track.title}</h4><p>{track.note}</p></div>
+              {articles.length > 0 && <a class="record-column-more text-link" href={withBase(`columns/${track.slug}/`)} aria-label={`浏览 ${track.title} 的全部 ${articles.length} 篇文章`}>全部 {articles.length} 篇 <span aria-hidden="true">↗</span></a>}
+            </header>
+            {examples.length > 0 && <p class="record-column-preview-note"><span class="demo-label">排版示例</span><span>以下为现有示例文章，仅预览卡片样式，不计入本专栏。</span></p>}
+            {displayed.length > 0 ? <div class="record-column-articles" aria-labelledby={`column-${track.slug}`} data-article-kind={articles.length ? 'published' : 'layout-example'}>{displayed.map((post, index) => <PostCard post={post} index={index} headingTag="h5" />)}</div> : <p class="record-column-empty"><span class="record-column-upcoming">即将更新</span></p>}
+          </li>;
         })}
       </ol>
       <footer class="record-program-footer"><span>BOHEMIA <span aria-hidden="true">·</span> {side.side}</span><span>写作未完，唱片继续。</span></footer>

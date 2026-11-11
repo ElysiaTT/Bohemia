@@ -62,10 +62,29 @@ if (new Set(slugs).size !== slugs.length) errors.push('Record column IDs must be
 if (!home.includes('data-record-side="side-a"')) errors.push('Home must default to Side A');
 if ((home.match(/<button\b[^>]*\bdata-record-toggle(?=[\s=>])/g) || []).length !== 1) errors.push('Expected one record flip button');
 if (home.includes('class="record-sides"') || home.includes('两面唱片，写给不同的世界')) errors.push('Obsolete static two-column tracklist remains');
+if (home.includes('record-article-flow')) errors.push('Home must show articles inside their columns without a duplicate article feed');
+const columnSections = [...home.matchAll(/<li\b[^>]*\bdata-column="([^"]+)"[^>]*>([\s\S]*?)<\/li>/g)];
+if (columnSections.length !== slugs.length) errors.push('Each record column must have its own section');
+const columnBodies = new Map(columnSections.map(([, slug, body]) => [slug, body]));
 for (const side of record) {
   if (!home.includes(`data-record-panel="${side.id}"`) || !home.includes(`data-record-face="${side.id}"`)) errors.push(`Missing panel or cover for ${side.id}`);
   for (const track of side.tracks) {
     if (!track.note || !home.includes(escape(track.title)) || !home.includes(escape(track.note))) errors.push(`Missing title or Chinese description: ${track.slug}`);
+    const body = columnBodies.get(track.slug) || '';
+    if (!body.includes('class="record-column-header"') || !body.includes(`id="column-${track.slug}"`)) errors.push(`Missing column header: ${track.slug}`);
+    const cards = [...body.matchAll(/<article\b[^>]*\bclass="post-card"/g)].length;
+    if (cards > 4) errors.push(`Too many homepage articles in column: ${track.slug}`);
+    if (cards) {
+      if (!body.includes('class="record-column-articles"') || !body.includes(`aria-labelledby="column-${track.slug}"`)) errors.push(`Articles must be grouped beneath their column: ${track.slug}`);
+      if ((body.match(/<h5\b/g) || []).length !== cards) errors.push(`Article headings must follow the column heading: ${track.slug}`);
+    } else if (!body.includes('即将更新')) errors.push(`Empty column must show its upcoming state: ${track.slug}`);
+    if (body.includes('data-article-kind="layout-example"')) {
+      if (!body.includes('不计入本专栏')) errors.push(`Layout examples must be labelled: ${track.slug}`);
+      if (body.includes(`${base}/columns/${track.slug}/`)) errors.push(`Layout examples must not create column archive links: ${track.slug}`);
+      for (const id of track.layoutPreviewPosts || []) {
+        if (!body.includes(`${base}/posts/${id}/`)) errors.push(`Missing layout example: ${track.slug}/${id}`);
+      }
+    }
   }
 }
 const backPanel = home.match(/<section[^>]*data-record-panel="side-b"[^>]*>/)?.[0] || '';

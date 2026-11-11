@@ -2,13 +2,13 @@
 import type { Post } from '../lib/posts';
 import { postUrl, readingTime, formatDate, withBase } from '../lib/posts';
 import Icon from './Icon.astro';
-interface Props { post: Post; index?: number }
-const { post, index = 0 } = Astro.props;
+interface Props { post: Post; index?: number; headingTag?: 'h3' | 'h5' }
+const { post, index = 0, headingTag: Heading = 'h3' } = Astro.props;
 ---
 <article class="post-card" data-category={post.data.category}>
   <a class="post-image-link" href={postUrl(post)} tabindex="-1" aria-hidden="true"><img src={withBase(post.data.cover || 'images/forest.webp')} alt="" width="720" height="480" loading="lazy" /><span class="image-index">0{index + 1}</span><span class="image-arrow"><Icon name="diagonal" size={18} /></span></a>
   <div class="post-card-meta"><span class:list={['category-label', `category-${post.data.category}`]}>{post.data.category}</span><time datetime={post.data.date.toISOString()}>{formatDate(post.data.date)}</time></div>
-  <h3><a href={postUrl(post)}>{post.data.title}</a></h3>
+  <Heading class="post-card-title"><a href={postUrl(post)}>{post.data.title}</a></Heading>
   <p>{post.data.description}</p>
   <div class="post-card-bottom"><span>{readingTime(post)} 分钟阅读</span><a href={postUrl(post)} aria-label={`阅读：${post.data.title}`}>继续阅读 <Icon name="arrow" size={15} /></a></div>
 </article>

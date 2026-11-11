@@ -1,7 +1,7 @@
 {
   "checked_on": "2026-11-11",
   "site": "Bohemia",
-  "feature": "Interactive double-sided record homepage",
+  "feature": "Full-width columns with related image/article cards",
   "type_check": {
     "errors": 0,
     "warnings": 0,
@@ -25,28 +25,40 @@
     "default": "side-a",
     "flip_duration_ms": 820,
     "breathing_period_ms": 3000,
-    "single_source": "src/data/tracklist.json"
+    "single_source": "src/data/tracklist.json",
+    "homepage_articles_per_column": 4
   },
   "browser_checks": [
-    "Default Side A; Side B excluded from accessibility tree",
-    "Side A -> Side B -> Side A, Enter and Space",
-    "12 rapid consecutive flips keep cover, button, columns and sidebar synchronized",
-    "Desktop card height delta: 0px; following flow delta < 0.001px",
-    "Mobile card height and following flow delta: 0px",
-    "320px and 390px screens: no horizontal overflow, single-column tracklist",
-    "Dark theme preserves record state; theme persists after navigation",
-    "Search for Queen and article navigation",
-    "Returning to home starts at Side A",
-    "Mobile menu",
-    "Minified production build: Side A default, Side B flip and no console errors",
-    "768px tablet: two-column tracklist, no horizontal overflow"
+    "1440px desktop: full-width column sections and two article cards per row",
+    "768px tablet: two article cards per row, sidebar follows the columns",
+    "390px mobile: one article card per row",
+    "320px narrow mobile: long English titles wrap without horizontal overflow",
+    "All four example cover images load from the deployment base",
+    "Side A to Side B with Enter; Side B to Side A with Space",
+    "Six rapid flips keep cover, button, columns and sidebar synchronized",
+    "Desktop shared panel height remains 1916.802px on both sides",
+    "Inactive panel has inert and aria-hidden=true",
+    "Article card opens its existing article",
+    "Dark theme remains active after article navigation; light theme restored",
+    "Search for Queen returns the existing article",
+    "Production preview: default Side A, Side B flip, matching sidebar, no console errors",
+    "No separate duplicate article feed remains"
   ],
-  "reduced_motion": "CSS disables animation and transitions; controller has no animation-timer dependency. OS preference emulation is not exposed by the browser tool.",
+  "reduced_motion": "Existing CSS disables animation and transitions; controller has no animation-timer dependency. OS preference emulation is not exposed by the browser tool.",
   "content": {
     "existing_example_posts": 6,
     "new_articles_created": 0,
-    "empty_columns": "Coming soon, no empty links"
+    "layout_example_cards": 4,
+    "columns_with_layout_examples": 2,
+    "examples": "Clearly labelled; no real column assignment or archive counts; replaced when real column articles exist",
+    "other_empty_columns": "Coming soon, no empty links"
   },
+  "screenshots": [
+    "record-side-a-columns.jpg",
+    "record-side-b-columns.jpg",
+    "columns-mobile.jpg",
+    "columns-tablet-dark.jpg"
+  ],
   "public_deployment": {
     "target": "https://elysiatt.github.io/Bohemia/",
     "workflow_runs": "https://github.com/ElysiaTT/Bohemia/actions"
