@@ -1,15 +1,15 @@
 {
   "title": "Bohemia",
-  "subtitle": "不同的声音，同一场共鸣。",
-  "description": "Bohemia，灵感来自 Queen 的《波西米亚狂想曲》。一座由摇滚乐队构想而成的个人博客，让不同专栏承载不同的声音。",
-  "author": "Bohemia",
+  "subtitle": "an endless refrain.",
+  "description": "Bohemia — an endless refrain. Side A 记录机器学习、AI 与机器人研究；Side B 记录摇滚、摄影和生活。",
+  "author": "ElysiaTT",
   "url": "",
   "language": "zh-CN",
-  "github": "",
+  "github": "https://github.com/ElysiaTT",
   "email": "",
   "hero": {
-    "line1": "让热爱，",
-    "line2": "自由发声。",
-    "intro": "名字来自 Queen 的《波西米亚狂想曲》。\n让不同的专栏像不同的乐队，写下各自的声音。"
+    "line1": "在噪声里，",
+    "line2": "听见自己的旋律。",
+    "intro": "SIDE A / 机器学习、AI 与具身智能。\\nSIDE B / 摇滚、摄影，以及生活的回响。"
   }
 }
