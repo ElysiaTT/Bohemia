@@ -95,6 +95,8 @@ Bohemia 的原创封套保存在 `public/images/bohemia-cover.svg`；编辑后�
 
 本项目已包含 `.github/workflows/deploy.yml`，无需添加 Token。
 
+Pages 尚未启用时，推送会自动完成内容检查、静态构建和链接验证，并跳过发布。将 Pages 的 Source 设为 GitHub Actions 后，再推送或手动运行工作流即可发布。
+
 1. 在自己的 GitHub 账号下新建公开仓库。个人主页建议命名为 `YOUR_NAME.github.io`；普通仓库如 `blog` 也支持。
 2. 将项目内容提交到仓库的 `main` 分支。不要上传 `node_modules/`、`dist/` 或 `.local/`。
 3. 打开仓库 **Settings → Pages → Build and deployment → Source**，选择 **GitHub Actions**。

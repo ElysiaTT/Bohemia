@@ -17,6 +17,8 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      pages_enabled: ${{ steps.pages_status.outputs.enabled }}
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -25,22 +27,60 @@ jobs:
         with:
           node-version: '24'
           cache: npm
-      - name: Configure GitHub Pages
-        id: pages
-        uses: actions/configure-pages@v5
       - name: Install dependencies
         run: npm ci
       - name: Check content and types
         run: npm run check
+      - name: Detect GitHub Pages configuration
+        id: pages_status
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          node --input-type=module <<'NODE'
+          import { appendFileSync } from 'node:fs';
+          const repository = process.env.GITHUB_REPOSITORY;
+          const [owner, name] = repository.split('/');
+          const origin = `https://${owner.toLowerCase()}.github.io`;
+          const base = name.toLowerCase() === `${owner.toLowerCase()}.github.io` ? '/' : `/${name}`;
+          const response = await fetch(`https://api.github.com/repos/${repository}/pages`, {
+            headers: {
+              Authorization: `Bearer ${process.env.GH_TOKEN}`,
+              Accept: 'application/vnd.github+json',
+              'User-Agent': 'Bohemia-Pages-Configuration',
+            },
+          });
+          let enabled = false;
+          if (response.ok) {
+            enabled = (await response.json()).build_type === 'workflow';
+          } else if (response.status !== 404) {
+            throw new Error(`Unable to read Pages configuration: HTTP ${response.status}`);
+          }
+          appendFileSync(process.env.GITHUB_OUTPUT, `enabled=${enabled}\norigin=${origin}\nbase=${base}\n`);
+          if (!enabled) {
+            appendFileSync(process.env.GITHUB_STEP_SUMMARY,
+              `GitHub Pages is not configured for Actions. This run validates the blog without publishing it. To enable publishing, choose **GitHub Actions** in [Settings → Pages](https://github.com/${repository}/settings/pages), then run this workflow again.\n`);
+          }
+          NODE
+      - name: Configure GitHub Pages
+        if: steps.pages_status.outputs.enabled == 'true'
+        id: pages
+        uses: actions/configure-pages@v5
       - name: Build static site
-        run: npm run build -- --site "${{ steps.pages.outputs.origin }}" --base "${{ steps.pages.outputs.base_path }}"
+        env:
+          SITE_URL: ${{ steps.pages.outputs.origin || steps.pages_status.outputs.origin }}
+          SITE_BASE: ${{ steps.pages.outputs.base_path || steps.pages_status.outputs.base }}
+        run: npm run build
       - name: Verify links and generated content
-        run: node scripts/verify-build.mjs "${{ steps.pages.outputs.base_path }}"
+        env:
+          SITE_BASE: ${{ steps.pages.outputs.base_path || steps.pages_status.outputs.base }}
+        run: node scripts/verify-build.mjs "$SITE_BASE"
       - name: Upload Pages artifact
+        if: steps.pages_status.outputs.enabled == 'true'
         uses: actions/upload-pages-artifact@v3
         with:
           path: dist
   deploy:
+    if: needs.build.outputs.pages_enabled == 'true'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
