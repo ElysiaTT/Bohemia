@@ -4,6 +4,9 @@
 .studio-heading .eyebrow > span { margin-inline: 10px; color: var(--faint); }
 .studio-heading h1 { margin: 11px 0 0; font: 500 31px/1.7 var(--serif); letter-spacing: .8px; }
 .studio-heading h1 > span, .studio-body-heading h2 > span, .studio-auth h2 > span { color: var(--accent); }
+.studio-heading h1 > [data-en], .studio-body-heading h2 > [data-en], .studio-auth h2 > [data-en] { color: inherit; }
+.studio-new > [data-en], .studio-library-tabs button > [data-en] { font: inherit; margin-left: 0; }
+.studio-management > summary > [data-en] { margin-left: 0; }
 .studio-heading > div > p:last-child { margin-top: 8px; font-size: 12px; color: var(--muted); }
 .studio-connect-button { display: inline-flex; align-items: center; justify-content: center; gap: 11px; padding: 12px 15px; border: 1px solid var(--line); border-radius: 3px; white-space: nowrap; font-size: 12px; }
 .studio-connect-button:hover, .studio-secondary:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }

@@ -2,14 +2,17 @@
 import { recordSides, columnPosts, columnLayoutExamples, COLUMN_ARTICLE_LIMIT } from '../lib/record';
 import { withBase, type Post } from '../lib/posts';
 import PostCard from './PostCard.astro';
+import Local from './Local.astro';
+import {attributes} from '../lib/i18n';
+import {sideEnglish, columnEnglish} from '../data/english';
 interface Props { posts: Post[] }
 const { posts } = Astro.props;
 ---
-<section class="record-tracklist" id="record-tracklist" aria-label="当前唱片的专栏">
+<section class="record-tracklist" id="record-tracklist" {...attributes({'aria-label': ['Columns on the current record side', '当前唱片的专栏']})}>
   <div class="record-programs">
     {recordSides.map((side, index) => <section class="record-program" data-record-panel={side.id} data-side-label={side.side} data-side-name={side.name} data-side-cover-title={side.artwork.title} data-side-credit={side.artwork.credit} data-side-heading={side.heading} data-side-subtitle={`${side.name.toUpperCase()} / ${side.heading}`} data-side-descriptor={side.descriptor} data-side-intent={side.intent} data-side-count={side.tracks.length} aria-labelledby={`${side.id}-program-title`} aria-hidden={index === 1 ? 'true' : 'false'} inert={index === 1}>
-      <header class="record-program-header"><div><p class="eyebrow">{side.side} <span aria-hidden="true">/</span> {String(side.tracks.length).padStart(2, '0')} COLUMNS</p><h3 id={`${side.id}-program-title`}>{side.name}<span>.</span></h3><p class="record-program-heading">{side.heading}</p></div><span class="record-program-mark" aria-hidden="true">{index === 0 ? 'A' : 'B'}<i>33⅓<br />RPM</i></span></header>
-      <p class="record-program-intro">{side.intro}</p>
+      <header class="record-program-header"><div><p class="eyebrow">{side.side} <span aria-hidden="true">/</span> {String(side.tracks.length).padStart(2, '0')} COLUMNS</p><h3 id={`${side.id}-program-title`}>{side.name}<span>.</span></h3><Local as="p" class="record-program-heading" en={sideEnglish[side.id].heading} zh={side.heading} /></div><span class="record-program-mark" aria-hidden="true">{index === 0 ? 'A' : 'B'}<i>33⅓<br />RPM</i></span></header>
+      <Local as="p" class="record-program-intro" en={sideEnglish[side.id].intro} zh={side.intro} />
       <ol class="record-columns">
         {side.tracks.map((track, trackIndex) => {
           const articles = columnPosts(posts, track.slug);
@@ -18,15 +21,15 @@ const { posts } = Astro.props;
           return <li class="record-column" data-column={track.slug}>
             <header class="record-column-header">
               <span class="record-column-number" aria-hidden="true">{String(trackIndex + 1).padStart(2, '0')}</span>
-              <div class="record-column-copy"><h4 id={`column-${track.slug}`}>{articles.length ? <a href={withBase(`columns/${track.slug}/`)}>{track.title}</a> : track.title}</h4><p>{track.note}</p></div>
-              {articles.length > 0 && <a class="record-column-more text-link" href={withBase(`columns/${track.slug}/`)} aria-label={`浏览 ${track.title} 的全部 ${articles.length} 篇文章`}>全部 {articles.length} 篇 <span aria-hidden="true">↗</span></a>}
+              <div class="record-column-copy"><h4 id={`column-${track.slug}`}>{articles.length ? <a href={withBase(`columns/${track.slug}/`)}>{track.title}</a> : track.title}</h4><Local as="p" en={columnEnglish[track.slug]} zh={track.note} /></div>
+              {articles.length > 0 && <a class="record-column-more text-link" href={withBase(`columns/${track.slug}/`)} {...attributes({'aria-label': [`Browse all articles in ${track.title}`, `浏览 ${track.title} 的全部 ${articles.length} 篇文章`]})}><Local en={`All ${articles.length}`} zh={`全部 ${articles.length} 篇`} /><span aria-hidden="true">↗</span></a>}
             </header>
-            {examples.length > 0 && <p class="record-column-preview-note"><span class="demo-label">排版示例</span><span>以下为现有示例文章，仅预览卡片样式，不计入本专栏。</span></p>}
-            {displayed.length > 0 ? <div class="record-column-articles" aria-labelledby={`column-${track.slug}`} data-article-kind={articles.length ? 'published' : 'layout-example'}>{displayed.map((post, index) => <PostCard post={post} index={index} headingTag="h5" />)}</div> : <p class="record-column-empty"><span class="record-column-upcoming">即将更新</span></p>}
+            {examples.length > 0 && <p class="record-column-preview-note"><Local class="demo-label" en="Layout samples" zh="排版示例" /><Local en="Sample articles preview the layout; they are not part of this column." zh="以下为现有示例文章，仅预览卡片样式，不计入本专栏。" /></p>}
+            {displayed.length > 0 ? <div class="record-column-articles" aria-labelledby={`column-${track.slug}`} data-article-kind={articles.length ? 'published' : 'layout-example'}>{displayed.map((post, index) => <PostCard post={post} index={index} headingTag="h5" />)}</div> : <p class="record-column-empty"><Local class="record-column-upcoming" en="Coming soon" zh="即将更新" /></p>}
           </li>;
         })}
       </ol>
-      <footer class="record-program-footer"><span>BOHEMIA'S RAIN <span aria-hidden="true">·</span> {side.side}</span><span>写作未完，唱片继续。</span></footer>
+      <footer class="record-program-footer"><span>BOHEMIA'S RAIN <span aria-hidden="true">·</span> {side.side}</span><Local en="More to write. More to play." zh="写作未完，唱片继续。" /></footer>
     </section>)}
   </div>
 </section>

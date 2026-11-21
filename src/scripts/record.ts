@@ -1,3 +1,5 @@
+import {text, columnCount, LANGUAGE_EVENT} from '../lib/i18n.ts';
+import {sideEnglish} from '../data/english.ts';
 /** One page-local state controls the sleeve, tracklist, button and sidebar together. */
 export function initRecord(root: HTMLElement) {
   if (root.dataset.recordReady === 'true') return;
@@ -12,6 +14,7 @@ export function initRecord(root: HTMLElement) {
     const active = panels[index];
     const next = panels[(index + 1) % panels.length];
     const id = active.dataset.recordPanel!;
+    const english = sideEnglish[id];
     root.dataset.recordSide = id;
     for (const panel of panels) {
       const selected = panel === active;
@@ -24,17 +27,17 @@ export function initRecord(root: HTMLElement) {
       face.setAttribute('aria-hidden', String(!selected));
     }
     button.setAttribute('aria-pressed', String(index === 1));
-    button.title = `翻至 ${next.dataset.sideLabel} — ${next.dataset.sideCoverTitle}`;
-    root.querySelectorAll<HTMLElement>('[data-record-button-label]').forEach(label => { label.textContent = `翻至 ${next.dataset.sideLabel}`; });
+    button.title = `${text('Flip to', '翻至')} ${next.dataset.sideLabel} — ${next.dataset.sideCoverTitle}`;
+    root.querySelectorAll<HTMLElement>('[data-record-button-label]').forEach(label => { label.textContent = `${text('Flip to', '翻至')} ${next.dataset.sideLabel}`; });
     root.querySelectorAll<HTMLElement>('[data-now-playing-side]').forEach(label => { label.textContent = active.dataset.sideLabel!; });
     root.querySelectorAll<HTMLElement>('[data-now-playing-name], [data-record-hero-title]').forEach(label => { label.textContent = active.dataset.sideCoverTitle!; });
     root.querySelectorAll<HTMLElement>('[data-record-credit]').forEach(label => { label.textContent = active.dataset.sideCredit!; });
-    root.querySelectorAll<HTMLElement>('[data-now-playing-heading]').forEach(label => { label.textContent = active.dataset.sideHeading!; });
-    root.querySelectorAll<HTMLElement>('[data-record-side-subtitle]').forEach(label => { label.textContent = active.dataset.sideSubtitle!; });
+    root.querySelectorAll<HTMLElement>('[data-now-playing-heading]').forEach(label => { label.textContent = text(english.heading, active.dataset.sideHeading!); });
+    root.querySelectorAll<HTMLElement>('[data-record-side-subtitle]').forEach(label => { label.textContent = text(`${active.dataset.sideName!.toUpperCase()} / ${english.heading}`, active.dataset.sideSubtitle!); });
     root.querySelectorAll<HTMLElement>('[data-record-side-descriptor]').forEach(label => { label.textContent = active.dataset.sideDescriptor!; });
-    root.querySelectorAll<HTMLElement>('[data-record-side-intent]').forEach(label => { label.textContent = active.dataset.sideIntent!; });
-    root.querySelectorAll<HTMLElement>('[data-now-playing-count]').forEach(label => { label.textContent = `${active.dataset.sideCount} 个专栏`; });
-    if (announce && status) status.textContent = `当前 ${active.dataset.sideLabel}，${active.dataset.sideCoverTitle}，${active.dataset.sideCount} 个专栏。`;
+    root.querySelectorAll<HTMLElement>('[data-record-side-intent]').forEach(label => { label.textContent = text(english.intent, active.dataset.sideIntent!); });
+    root.querySelectorAll<HTMLElement>('[data-now-playing-count]').forEach(label => { label.textContent = columnCount(Number(active.dataset.sideCount)); });
+    if (announce && status) status.textContent = text(`Now playing ${active.dataset.sideLabel}, ${active.dataset.sideCoverTitle}, ${active.dataset.sideCount} columns.`, `当前 ${active.dataset.sideLabel}，${active.dataset.sideCoverTitle}，${active.dataset.sideCount} 个专栏。`);
   };
 
   // Default to Side A on every visit, independent of theme or previous visits.
@@ -45,6 +48,7 @@ export function initRecord(root: HTMLElement) {
     activeIndex = (activeIndex + 1) % panels.length;
     render(activeIndex);
   });
+  document.addEventListener(LANGUAGE_EVENT, () => render(activeIndex));
   // CSS transitions reverse naturally on rapid clicks; no timers can leave stale state.
 }
 

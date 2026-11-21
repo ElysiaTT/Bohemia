@@ -1,7 +1,9 @@
 ---
 import type { RecordSide } from '../lib/record';
 import { withBase } from '../lib/posts';
+import {attributes} from '../lib/i18n';
+import {sideEnglish} from '../data/english';
 interface Props { side: RecordSide }
 const { side } = Astro.props;
 ---
-<img src={`${withBase(side.artwork.image)}?v=${side.artwork.revision}`} width="1000" height="800" alt={`${side.side} — ${side.artwork.title} ${side.artwork.description}`} data-record-artwork={side.id} decoding="async" />
+<img src={`${withBase(side.artwork.image)}?v=${side.artwork.revision}`} width="1000" height="800" {...attributes({alt: [`${side.side} — ${side.artwork.title} ${sideEnglish[side.id].artwork}`, `${side.side} — ${side.artwork.title} ${side.artwork.description}`]})} data-record-artwork={side.id} decoding="async" />

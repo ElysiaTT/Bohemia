@@ -1,0 +1,5 @@
+---
+interface Props { en: string; zh: string; as?: string; [key: string]: unknown }
+const { en, zh, as: Tag = 'span', ...rest } = Astro.props;
+---
+<Tag {...rest} data-en={en} data-zh={zh}>{en}</Tag>

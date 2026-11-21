@@ -1,0 +1,37 @@
+{
+  "checked_on": "2026-11-21",
+  "feature": "English-default interface with a persistent Chinese/English header switch",
+  "type_check": { "files": 45, "errors": 0, "warnings": 0, "hints": 0 },
+  "automated_tests_passed": 27,
+  "build": {
+    "bases": ["/", "/Bohemia/"],
+    "html_pages": 14,
+    "local_references": 427,
+    "public_posts": 6,
+    "english_default_and_one_language_button_on_every_page": true,
+    "bilingual_text_bindings": 552
+  },
+  "language_checks": {
+    "first_visit_defaults_to_english": true,
+    "chinese_preference_restores": true,
+    "switching_works_when_storage_is_blocked": true,
+    "cross_tab_updates_do_not_rewrite_storage": true,
+    "repeated_switches_update_text_metadata_and_accessible_attributes": true,
+    "authored_content_and_input_values_are_excluded": true,
+    "switching_language_preserves_side_b_and_later_flips": true
+  },
+  "preserved": {
+    "original_article_sources_and_urls": true,
+    "all_14_column_ids_titles_and_chinese_descriptions": true,
+    "search_json_matches_previous_deployment": true,
+    "rss_xml_matches_previous_deployment": true,
+    "studio_article_snapshot_matches_previous_deployment": true,
+    "publishing_and_draft_storage_implementations": true,
+    "new_dependencies": 0
+  },
+  "interface_scope": ["Shared header and footer", "Home and both record sides", "Column descriptions", "Writing, archive, notes, about and 404", "Article navigation and reading controls", "Search and category filters", "Writing room labels, preview and publishing messages"],
+  "responsive_changes": "The header gives its language and navigation controls their own row on narrow screens. English captions and filter labels can wrap without sharing the flip button's grid column.",
+  "verification_method": "Static HTML audit, source comparison and tests of the actual language and record controllers against DOM fixtures. These do not replace browser rendering tests.",
+  "browser_checks": { "status": "unavailable", "reason": "Browser preview access timed out while requesting service_info. No browser interaction or screenshot verification was completed." },
+  "target": "https://elysiatt.github.io/Bohemia/"
+}

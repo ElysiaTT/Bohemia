@@ -1,6 +1,9 @@
 ---
 import RecordSleeve from './RecordSleeve.astro';
 import { recordSides } from '../lib/record';
+import Local from './Local.astro';
+import {sideEnglish} from '../data/english';
+import {attributes} from '../lib/i18n';
 ---
 <figure class="hero-visual record-showcase">
   <div class="record-scene">
@@ -9,13 +12,13 @@ import { recordSides } from '../lib/record';
     </div>
   </div>
   <figcaption>
-    <span class="record-caption"><span class="record-caption-subtitle" data-record-side-subtitle>{recordSides[0].name.toUpperCase()} / {recordSides[0].heading}</span></span>
+    <span class="record-caption"><span class="record-caption-subtitle" data-record-side-subtitle>{recordSides[0].name.toUpperCase()} / {sideEnglish[recordSides[0].id].heading}</span></span>
     <span class="record-toggle-wrap">
-      <span class="record-toggle-hint" id="record-toggle-hint">点击翻面</span>
-      <button type="button" class="record-toggle" data-record-toggle aria-label="切换唱片正反面" aria-pressed="false" aria-controls="record-tracklist" aria-describedby="record-status record-toggle-hint" title={`翻至 ${recordSides[1].side} — ${recordSides[1].artwork.title}`} disabled>
-        <span class="record-toggle-surface"><span data-record-button-label>翻至 {recordSides[1].side}</span><svg class="record-toggle-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 7v5h-5M20 12a8 8 0 1 0-2.3 5.6" /></svg></span>
+      <Local class="record-toggle-hint" id="record-toggle-hint" en="Click to flip" zh="点击翻面" />
+      <button type="button" class="record-toggle" data-record-toggle {...attributes({'aria-label': ['Flip the record', '切换唱片正反面']})} aria-pressed="false" aria-controls="record-tracklist" aria-describedby="record-status record-toggle-hint" title={`Flip to ${recordSides[1].side} — ${recordSides[1].artwork.title}`} disabled>
+        <span class="record-toggle-surface"><span data-record-button-label>Flip to {recordSides[1].side}</span><svg class="record-toggle-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 7v5h-5M20 12a8 8 0 1 0-2.3 5.6" /></svg></span>
       </button>
     </span>
   </figcaption>
-  <noscript><p class="record-no-script">开启 JavaScript 即可翻面浏览 Side B；文章阅读不受影响。</p></noscript>
+  <noscript><p class="record-no-script">Enable JavaScript to flip to Side B. Articles remain readable without it.</p></noscript>
 </figure>

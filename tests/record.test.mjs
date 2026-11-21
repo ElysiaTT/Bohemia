@@ -1,12 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
+import {sideEnglish} from '../src/data/english.ts';
 
 const sides = JSON.parse(await readFile(new URL('../src/data/tracklist.json', import.meta.url), 'utf8'));
 // Exercise the actual controller without adding a DOM or browser dependency.
 globalThis.document = {querySelectorAll: () => []};
 const {initRecord} = await import('../src/scripts/record.ts');
-delete globalThis.document;
 
 class Element {
   dataset = {};
@@ -26,6 +26,7 @@ class Element {
 }
 
 function fixture() {
+  globalThis.document = Object.assign(new EventTarget(), {documentElement: {dataset: {language: 'en'}}});
   const button = new Element(), status = new Element(), root = new Element();
   status.textContent = 'Server-rendered Side A status';
   root.dataset.recordSide = 'side-b';
@@ -49,22 +50,23 @@ function fixture() {
   return {root, button, status, panels, faces, bindings};
 }
 
-function assertSide(view, index) {
+function assertSide(view, index, language = 'en') {
   const active = sides[index], next = sides[(index + 1) % sides.length];
+  const zh = language === 'zh', english = sideEnglish[active.id];
   assert.equal(view.root.dataset.recordSide, active.id);
   assert.equal(view.button.attributes.get('aria-pressed'), String(index === 1));
-  assert.equal(view.button.title, `翻至 ${next.side} — ${next.artwork.title}`);
+  assert.equal(view.button.title, `${zh ? '翻至' : 'Flip to'} ${next.side} — ${next.artwork.title}`);
   const expected = {
-    'data-record-button-label': `翻至 ${next.side}`,
+    'data-record-button-label': `${zh ? '翻至' : 'Flip to'} ${next.side}`,
     'data-now-playing-side': active.side,
     'data-now-playing-name': active.artwork.title,
     'data-record-hero-title': active.artwork.title,
     'data-record-credit': active.artwork.credit,
-    'data-now-playing-heading': active.heading,
-    'data-record-side-subtitle': `${active.name.toUpperCase()} / ${active.heading}`,
+    'data-now-playing-heading': zh ? active.heading : english.heading,
+    'data-record-side-subtitle': `${active.name.toUpperCase()} / ${zh ? active.heading : english.heading}`,
     'data-record-side-descriptor': active.descriptor,
-    'data-record-side-intent': active.intent,
-    'data-now-playing-count': `${active.tracks.length} 个专栏`,
+    'data-record-side-intent': zh ? active.intent : english.intent,
+    'data-now-playing-count': `${active.tracks.length} ${zh ? '个专栏' : 'columns'}`,
   };
   for (const [name, value] of Object.entries(expected)) {
     for (const node of view.bindings.get(name)) assert.equal(node.textContent, value, name);
@@ -91,8 +93,21 @@ test('Repeated and rapid flips keep every label, panel, face and announcement in
     view.button.click();
     const index = click % 2, side = sides[index];
     assertSide(view, index);
-    assert.equal(view.status.textContent, `当前 ${side.side}，${side.artwork.title}，${side.tracks.length} 个专栏。`);
+    assert.equal(view.status.textContent, `Now playing ${side.side}, ${side.artwork.title}, ${side.tracks.length} columns.`);
   }
+});
+test('Switching interface language preserves Side B and keeps later flips localized', () => {
+  const view = fixture();
+  initRecord(view.root);
+  view.button.click();
+  for (const language of ['zh', 'en', 'zh']) {
+    document.documentElement.dataset.language = language;
+    document.dispatchEvent(new Event('bohemia:language'));
+    assertSide(view, 1, language);
+    view.button.click(); assertSide(view, 0, language);
+    view.button.click(); assertSide(view, 1, language);
+  }
+  assert.equal(view.button.listeners.get('click').length, 1);
 });
 
 test('Reinitializing an active record leaves the selected side and single click handler intact', () => {

@@ -1,6 +1,9 @@
 ---
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
+import Local from '../components/Local.astro';
+import {postCount, localized, attributes} from '../lib/i18n';
+import {sideEnglish, noteEnglish} from '../data/english';
 import RecordShowcase from '../components/RecordShowcase.astro';
 import RecordTracklist from '../components/RecordTracklist.astro';
 import { recordSides } from '../lib/record';
@@ -16,30 +19,30 @@ const firstSide = recordSides[0];
     <section class="hero wrap">
       <div class="hero-copy">
         <div class="hero-eyebrow"><span class="eyebrow">A PERSONAL RHAPSODY</span><span class="growing"><i></i> ON AIR</span></div>
-        <h1>{site.hero.line1}<br /><span>{site.hero.line2}</span></h1>
+        <h1><Local en="Through the noise," zh={site.hero.line1} /><br /><Local en="find your own melody." zh={site.hero.line2} /></h1>
         <p class="hero-refrain" data-record-hero-title>{firstSide.artwork.title}</p>
-        <p class="hero-description"><span class="hero-side-descriptor" data-record-side-descriptor>{firstSide.descriptor}</span><br /><span data-record-side-intent>{firstSide.intent}</span></p>
-        <div class="hero-actions"><a class="button button-dark" href="#record-tracklist">探索专栏 <Icon name="arrow" size={18} /></a><a class="text-link" href={withBase('about/')}>认识一下 <Icon name="diagonal" size={15} /></a></div>
+        <p class="hero-description"><span class="hero-side-descriptor" data-record-side-descriptor>{firstSide.descriptor}</span><br /><span data-record-side-intent>{sideEnglish[firstSide.id].intent}</span></p>
+        <div class="hero-actions"><a class="button button-dark" href="#record-tracklist"><Local en="Explore the columns" zh="探索专栏" /><Icon name="arrow" size={18} /></a><a class="text-link" href={withBase('about/')}><Local en="Meet the record" zh="认识一下" /><Icon name="diagonal" size={15} /></a></div>
         <div class="hero-footnote"><span class="tiny-signal" aria-hidden="true">♫</span><span data-record-credit>{firstSide.artwork.credit}</span></div>
       </div>
       <RecordShowcase />
     </section>
-    <output class="record-visually-hidden" id="record-status" role="status" aria-live="polite" aria-atomic="true">当前 {firstSide.side}，{firstSide.artwork.title}，{firstSide.tracks.length} 个专栏。</output>
-    <div class="journal-divider wrap"><span><span class="little-spark" aria-hidden="true">✳</span> 每一份热爱，都有自己的声部。</span><span class="eyebrow">TWO SIDES OF THE SAME RECORD. <span aria-hidden="true">↘</span></span></div>
+    <output class="record-visually-hidden" id="record-status" role="status" aria-live="polite" aria-atomic="true" {...localized(`Now playing ${firstSide.side}, ${firstSide.artwork.title}, ${firstSide.tracks.length} columns.`, `当前 ${firstSide.side}，${firstSide.artwork.title}，${firstSide.tracks.length} 个专栏。`)}>Now playing {firstSide.side}, {firstSide.artwork.title}, {firstSide.tracks.length} columns.</output>
+    <div class="journal-divider wrap"><span><span class="little-spark" aria-hidden="true">✳</span><Local en="Every curiosity has a voice." zh="每一份热爱，都有自己的声部。" /></span><span class="eyebrow">TWO SIDES OF THE SAME RECORD. <span aria-hidden="true">↘</span></span></div>
     <div class="journal-layout wrap" id="latest">
       <section class="journal-main">
-        <div class="section-heading"><div><span class="eyebrow">THE TRACKLIST</span><h2>正在播放<span class="section-period">.</span></h2></div><a class="text-link" href={withBase('writing/')}>全部文章 <Icon name="arrow" size={16} /></a></div>
+        <div class="section-heading"><div><span class="eyebrow">THE TRACKLIST</span><h2><Local en="Now playing" zh="正在播放" /><span class="section-period">.</span></h2></div><a class="text-link" href={withBase('writing/')}><Local en="All articles" zh="全部文章" /><Icon name="arrow" size={16} /></a></div>
         <RecordTracklist posts={posts} />
-        <a class="all-writing" href={withBase('writing/')}><span>还有一些想法，等你来翻。</span><span>浏览全部 {posts.length} 篇文章 <Icon name="arrow" size={17} /></span></a>
+        <a class="all-writing" href={withBase('writing/')}><Local en="More thoughts, waiting to be found." zh="还有一些想法，等你来翻。" /><span><Local en={`Browse all ${postCount(posts.length, 'en')}`} zh={`浏览全部 ${posts.length} 篇文章`} /><Icon name="arrow" size={17} /></span></a>
       </section>
       <aside class="journal-sidebar">
-        <section class="about-card"><div class="about-card-top"><span class="eyebrow">BEHIND THE RECORD</span><span class="hand-wave" aria-hidden="true">✳</span></div><div class="avatar-mark" aria-hidden="true"><svg viewBox="0 0 50 50"><circle cx="25" cy="25" r="19" /><circle cx="25" cy="25" r="12" /><circle cx="25" cy="25" r="4" /></svg></div><h2>一张唱片，两种回响。</h2><p>一面记录世界如何运作，一面记录世界如何触动自己。</p><p>bohemia's rain，连接 Queen 的狂想与 X JAPAN 的雨。两面各有声部，热爱在这里相遇。</p><a class="text-link" href={withBase('about/')}>关于这两面唱片 <Icon name="diagonal" size={15} /></a><div class="about-card-bottom"><span class="status-dot"></span> 自由表达，保持热爱。</div></section>
-        <section class="record-now-playing" aria-label="当前唱片面"><span class="eyebrow">NOW PLAYING</span><div class="record-now-playing-head"><span class="record-now-playing-disc" aria-hidden="true"></span><div><p data-now-playing-side>{firstSide.side}</p><h2 data-now-playing-name>{firstSide.artwork.title}</h2></div></div><div class="record-now-playing-caption"><span data-record-side-subtitle>{firstSide.name.toUpperCase()} / {firstSide.heading}</span><span data-now-playing-count>{firstSide.tracks.length} 个专栏</span></div><a class="text-link" href="#record-tracklist">查看当前专栏 <Icon name="arrow" size={15} /></a></section>
-        <section class="sidebar-notes"><div class="sidebar-heading"><span class="eyebrow">LITTLE THINGS</span><h2>生活的切片</h2></div>{notes.slice(0, 2).map(note => <a class="mini-note" href={withBase(`notes/#${note.id}`)}><time>{note.date.replaceAll('-', '.')}</time><p>{note.content}</p><span>#{note.tag}</span></a>)}<a class="text-link" href={withBase('notes/')}>更多碎片 <Icon name="arrow" size={15} /></a></section>
-        <section class="rss-card"><Icon name="rss" size={24} /><h2>把更新，交给 RSS。</h2><p>不追赶算法。用你喜欢的阅读器，慢慢读。</p><a href={withBase('rss.xml')} class="text-link">订阅这个小站 <Icon name="diagonal" size={15} /></a></section>
+        <section class="about-card"><div class="about-card-top"><span class="eyebrow">BEHIND THE RECORD</span><span class="hand-wave" aria-hidden="true">✳</span></div><div class="avatar-mark" aria-hidden="true"><svg viewBox="0 0 50 50"><circle cx="25" cy="25" r="19" /><circle cx="25" cy="25" r="12" /><circle cx="25" cy="25" r="4" /></svg></div><Local as="h2" en="One record. Two ways to listen." zh="一张唱片，两种回响。" /><Local as="p" en="One side explores how the world works. The other records how it moves me." zh="一面记录世界如何运作，一面记录世界如何触动自己。" /><Local as="p" en="bohemia's rain brings Queen’s rhapsody and X JAPAN’s rain together. Different voices, shared curiosity." zh="bohemia's rain，连接 Queen 的狂想与 X JAPAN 的雨。两面各有声部，热爱在这里相遇。" /><a class="text-link" href={withBase('about/')}><Local en="About the two sides" zh="关于这两面唱片" /><Icon name="diagonal" size={15} /></a><div class="about-card-bottom"><span class="status-dot"></span><Local en="Stay curious. Keep creating." zh="自由表达，保持热爱。" /></div></section>
+        <section class="record-now-playing" {...attributes({'aria-label': ['Current record side', '当前唱片面']})}><span class="eyebrow">NOW PLAYING</span><div class="record-now-playing-head"><span class="record-now-playing-disc" aria-hidden="true"></span><div><p data-now-playing-side>{firstSide.side}</p><h2 data-now-playing-name>{firstSide.artwork.title}</h2></div></div><div class="record-now-playing-caption"><span data-record-side-subtitle>{firstSide.name.toUpperCase()} / {sideEnglish[firstSide.id].heading}</span><span data-now-playing-count>{firstSide.tracks.length} columns</span></div><a class="text-link" href="#record-tracklist"><Local en="Explore this side" zh="查看当前专栏" /><Icon name="arrow" size={15} /></a></section>
+        <section class="sidebar-notes"><div class="sidebar-heading"><span class="eyebrow">LITTLE THINGS</span><Local as="h2" en="Fragments of life" zh="生活的切片" /></div>{notes.slice(0, 2).map(note => <a class="mini-note" href={withBase(`notes/#${note.id}`)}><time>{note.date.replaceAll('-', '.')}</time><Local as="p" en={noteEnglish[note.id]?.content || note.content} zh={note.content} /><Local en={`#${noteEnglish[note.id]?.tag || note.tag}`} zh={`#${note.tag}`} /></a>)}<a class="text-link" href={withBase('notes/')}><Local en="More notes" zh="更多碎片" /><Icon name="arrow" size={15} /></a></section>
+        <section class="rss-card"><Icon name="rss" size={24} /><Local as="h2" en="Let RSS bring the updates." zh="把更新，交给 RSS。" /><Local as="p" en="Read at your own pace, in your favorite reader." zh="不追赶算法。用你喜欢的阅读器，慢慢读。" /><a href={withBase('rss.xml')} class="text-link"><Local en="Subscribe to the blog" zh="订阅这个小站" /><Icon name="diagonal" size={15} /></a></section>
       </aside>
     </div>
-    <section class="closing-note wrap"><span class="eyebrow">THE ENCORE</span><blockquote>生活，不止一种节奏。<br /><span>把热爱写下来，让不同的声音相遇。</span></blockquote><span class="closing-signature">Long live curiosity. <span aria-hidden="true">♫</span></span></section>
+    <section class="closing-note wrap"><span class="eyebrow">THE ENCORE</span><blockquote><Local en="Life has more than one rhythm." zh="生活，不止一种节奏。" /><br /><Local en="Write what you love. Let different voices meet." zh="把热爱写下来，让不同的声音相遇。" /></blockquote><span class="closing-signature">Long live curiosity. <span aria-hidden="true">♫</span></span></section>
   </div>
   <script>
     import '../scripts/record';

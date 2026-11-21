@@ -2,6 +2,8 @@
 
 > 不同的声音，同一场共鸣。
 
+界面首次访问默认英文。顶部「中文 / EN」按钮即时切换语言，并在当前浏览器记住选择；导航、专栏说明、页面提示、搜索和写作台均提供双语。文章标题、摘要、正文、标签及网址保留原文，RSS 和搜索数据不因语言切换改变。语言与明暗主题、A/B 面状态相互独立。界面译文通过 `Local.astro` 与 `src/lib/i18n.ts` 维护，专栏英文说明在 `src/data/english.ts`，写作台译文在 `src/data/studio-english.json`。
+
 源码仓库：[ElysiaTT/Bohemia](https://github.com/ElysiaTT/Bohemia) · 默认分支：`main`
 
 一个为 GitHub Pages 制作的中文个人博客。名字将 Queen 的《Bohemian Rhapsody》（《波西米亚狂想曲》）与 X JAPAN 的《ENDLESS RAIN》连接起来，以原创黑胶封套、奶油纸色与酒红色建立视觉。每个专栏像一支不同的摇滚乐队，组成同一个自由表达的舞台。

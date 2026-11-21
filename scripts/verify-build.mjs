@@ -55,7 +55,11 @@ const manifest = readFileSync(resolve(root, 'sitemap-index.xml'), 'utf8');
 if (base && !manifest.includes(`${base}/sitemap-0.xml`)) errors.push('Sitemap does not include deployment base');
 const home = readFileSync(resolve(root, 'index.html'), 'utf8');
 const site = JSON.parse(readFileSync(resolve('src/data/site.json'), 'utf8'));
-if (!unescape(home).includes(`<title>${site.title} — ${site.subtitle}</title>`) || !unescape(home).includes(`content="${site.title}"`)) errors.push('Home title and sharing metadata must use the current site name');
+if (!unescape(home).includes(`>${site.title} — ${site.subtitle}</title>`) || !unescape(home).includes(`content="${site.title}"`)) errors.push('Home title and sharing metadata must use the current site name');
+for (const file of htmlFiles) {
+  const content = readFileSync(file, 'utf8');
+  if (!content.includes('lang="en"') || !content.includes('data-language="en"') || !content.includes('data-language-toggle')) errors.push(`${file}: English default and language switch are required`);
+}
 if (!unescape(rss).includes(site.title)) errors.push('RSS must use the current site name');
 const record = JSON.parse(readFileSync(resolve('src/data/tracklist.json'), 'utf8'));
 const escape = value => value.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');

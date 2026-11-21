@@ -1,34 +1,37 @@
 ---
 import Base from '../../layouts/Base.astro';
 import Icon from '../../components/Icon.astro';
+import Local from '../../components/Local.astro';
+import {sideEnglish} from '../../data/english';
+import {attributes} from '../../lib/i18n';
 import site from '../../data/site.json';
 import { withBase } from '../../lib/posts';
 import { recordSides } from '../../lib/record';
 ---
-<Base title="关于" description="bohemia's rain，将 Queen《波西米亚狂想曲》的狂想与 X JAPAN《ENDLESS RAIN》的雨连接在一起。不同的乐队，不同的专栏，同一个自由表达的舞台。">
+<Base title="About" titleZh="关于" description="bohemia's rain brings Queen’s Bohemian Rhapsody and X JAPAN’s ENDLESS RAIN together. Different voices, one personal record." descriptionZh="bohemia's rain，将 Queen《波西米亚狂想曲》的狂想与 X JAPAN《ENDLESS RAIN》的雨连接在一起。不同的乐队，不同的专栏，同一个自由表达的舞台。">
   <div class="wrap page-wrap about-page">
-    <header class="page-heading"><span class="eyebrow">BEHIND THE RECORD</span><h1>你好，这里是 {site.title}<span>.</span></h1><p>不同的声音，同一场共鸣。</p></header>
-    <div class="about-record-sleeves">{recordSides.map(side => <figure><img src={`${withBase(side.artwork.image)}?v=${side.artwork.revision}`} width="1000" height="800" alt={`${side.artwork.title} ${side.artwork.description}`} /><figcaption><span>{side.side}</span><em>{side.artwork.title}</em></figcaption></figure>)}</div>
+    <header class="page-heading"><span class="eyebrow">BEHIND THE RECORD</span><h1><Local en={`Hello, this is ${site.title}`} zh={`你好，这里是 ${site.title}`} /><span>.</span></h1><Local as="p" en="Different voices. A shared resonance." zh="不同的声音，同一场共鸣。" /></header>
+    <div class="about-record-sleeves">{recordSides.map(side => <figure><img src={`${withBase(side.artwork.image)}?v=${side.artwork.revision}`} width="1000" height="800" {...attributes({alt: [`${side.artwork.title} ${sideEnglish[side.id].artwork}`, `${side.artwork.title} ${side.artwork.description}`]})} /><figcaption><span>{side.side}</span><em>{side.artwork.title}</em></figcaption></figure>)}</div>
     <div class="about-content">
-      <aside><span class="eyebrow">THE INSPIRATION</span><h2>不止一种声音，<br />不止一种可能。</h2><p class="inspiration-credit">Queen<br /><em>Bohemian Rhapsody</em><br />X JAPAN<br /><em>ENDLESS RAIN</em></p></aside>
+      <aside><span class="eyebrow">THE INSPIRATION</span><Local as="h2" en="More than one voice. More than one possibility." zh="不止一种声音，不止一种可能。" /><p class="inspiration-credit">Queen<br /><em>Bohemian Rhapsody</em><br />X JAPAN<br /><em>ENDLESS RAIN</em></p></aside>
       <div class="prose">
-        <h2>为什么叫 bohemia's rain？</h2>
-        <p><em>bohemia</em> 来自皇后乐队 Queen 的《Bohemian Rhapsody》（《波西米亚狂想曲》），<em>rain</em> 呼应 X JAPAN 的《ENDLESS RAIN》。一份自由的狂想，一场无尽的雨，在同一个名字里相遇。</p>
-        <p>Side A 的封面名为 Bohemia.，以菱形排列的四道明暗人像、歌剧拱门和酒红帷幕表达狂想的戏剧性；Side B 的封面名为 <em>endless refrain.</em>，以雨夜和水面回响延续余音。同一张唱片的两面，有各自的名字、画面与声部。</p>
-        <p>技术可以与生活并肩，认真思考也可以与随手记录共存。不急着把自己归进一种风格，也不要求每一篇文字都用同一种方式开场。</p>
-        <blockquote><p>让不同的声音，各自成立，也彼此共鸣。</p></blockquote>
-        <h2>把博客想象成一个舞台</h2>
-        <p>这里的各个专栏，会以不同摇滚乐队为灵感。每个专栏像一支乐队，有自己的性格、关注的世界和表达方式；它们一起构成 bohemia's rain。</p>
-        <p>乐队是组织内容的灵感，文字依然可以写向任何值得探索的地方。一段技术笔记、一个日常片刻，或一份还没有结论的思考，都可以找到自己的声部。</p>
-        <h2>关于这份初稿</h2>
-        <p>舞台已经搭起，阵容慢慢成形。现有文章与碎片是用于展示排版的原创示例内容，并非博主真实经历。专栏阵容、文章和个人介绍会随着这个小站一起生长。</p>
-        {(site.github || site.email) && <><h2>保持联系</h2><div class="contact-links">{site.github && <a href={site.github} target="_blank" rel="noopener noreferrer"><Icon name="github" size={18} /> GitHub <Icon name="diagonal" size={14} /></a>}{site.email && <a href={`mailto:${site.email}`}><Icon name="mail" size={18} /> 写封邮件</a>}</div></>}
-        <h2 id="colophon">关于本站</h2>
-        <p>本站使用 Astro 构建，文章以 Markdown 保存，面向 GitHub Pages 发布。不依赖后台服务，没有追踪脚本。支持明暗主题、全文搜索与 RSS 订阅。</p>
-        <p>奶油纸色、酒红色与黑胶纹路，构成这份个人刊物的视觉。页面为阅读留出空间，也为不同的表达保留音量。</p>
-        <h3>影像与致谢</h3>
-        <p>两面唱片的封套与标识为本站原创 SVG 设计。Side A 的灵感来自 Queen 与《波西米亚狂想曲》，Side B 的灵感来自 X JAPAN 与《ENDLESS RAIN》；本站是独立个人博客。</p>
-        <p>示例文章封面来自 <a href="https://unsplash.com" target="_blank" rel="noopener noreferrer">Unsplash</a>，图片来源见项目 README。中文展示字体采用 Noto Serif SC，按 SIL Open Font License 使用。感谢每一位认真创作、自由分享的人。</p>
+        <Local as="h2" en="Why bohemia's rain?" zh="为什么叫 bohemia's rain？" />
+        <Local as="p" en="Bohemia comes from Queen’s Bohemian Rhapsody; rain echoes X JAPAN’s ENDLESS RAIN. A free-spirited rhapsody and an endless rain meet in a single name." zh="bohemia 来自皇后乐队 Queen 的《Bohemian Rhapsody》（《波西米亚狂想曲》），rain 呼应 X JAPAN 的《ENDLESS RAIN》。一份自由的狂想，一场无尽的雨，在同一个名字里相遇。" />
+        <Local as="p" en="Side A, Bohemia., gives the rhapsody a theatrical setting: four abstract faces, an opera arch and burgundy curtains. Side B, endless refrain., lets rain and ripples carry the echoes. Two sides of one record, each with its own image and voice." zh="Side A 的封面名为 Bohemia.，以菱形排列的四道明暗人像、歌剧拱门和酒红帷幕表达狂想的戏剧性；Side B 的封面名为 endless refrain.，以雨夜和水面回响延续余音。同一张唱片的两面，有各自的名字、画面与声部。" />
+        <Local as="p" en="Technology can sit beside everyday life. Careful thinking can share a page with a passing thought. There is no hurry to settle on one style, or to begin every story the same way." zh="技术可以与生活并肩，认真思考也可以与随手记录共存。不急着把自己归进一种风格，也不要求每一篇文字都用同一种方式开场。" />
+        <blockquote><Local as="p" en="Let different voices stand on their own, and resonate together." zh="让不同的声音，各自成立，也彼此共鸣。" /></blockquote>
+        <Local as="h2" en="Imagine the blog as a stage" zh="把博客想象成一个舞台" />
+        <Local as="p" en="Each column takes inspiration from rock music. Like a band, each has its own character, interests and way of speaking. Together, they make bohemia's rain." zh="这里的各个专栏，会以不同摇滚乐队为灵感。每个专栏像一支乐队，有自己的性格、关注的世界和表达方式；它们一起构成 bohemia's rain。" />
+        <Local as="p" en="Music gives the collection a shape; the writing can go anywhere curiosity leads. A technical note, a moment from daily life or a question without an answer can all find a voice here." zh="乐队是组织内容的灵感，文字依然可以写向任何值得探索的地方。一段技术笔记、一个日常片刻，或一份还没有结论的思考，都可以找到自己的声部。" />
+        <Local as="h2" en="A record still being made" zh="关于这份初稿" />
+        <Local as="p" en="The stage is set; the collection will keep growing. Articles marked as samples and the sample notes demonstrate the layout. The writing, columns and introduction will evolve with this place." zh="舞台已经搭起，阵容慢慢成形。标为示例的文章与碎片用于展示排版。专栏阵容、文章和个人介绍会随着这个小站一起生长。" />
+        {(site.github || site.email) && <><Local as="h2" en="Keep in touch" zh="保持联系" /><div class="contact-links">{site.github && <a href={site.github} target="_blank" rel="noopener noreferrer"><Icon name="github" size={18} /> GitHub <Icon name="diagonal" size={14} /></a>}{site.email && <a href={`mailto:${site.email}`}><Icon name="mail" size={18} /><Local en="Write a note" zh="写封邮件" /></a>}</div></>}
+        <Local as="h2" id="colophon" en="Colophon" zh="关于本站" />
+        <Local as="p" en="Built with Astro, with articles in Markdown and publishing on GitHub Pages. No backend service or tracking scripts. Includes light and dark themes, full-text search and RSS." zh="本站使用 Astro 构建，文章以 Markdown 保存，面向 GitHub Pages 发布。不依赖后台服务，没有追踪脚本。支持明暗主题、全文搜索与 RSS 订阅。" />
+        <Local as="p" en="Cream paper, burgundy ink and vinyl grooves give this personal journal its character. Room for reading, and room for more than one kind of expression." zh="奶油纸色、酒红色与黑胶纹路，构成这份个人刊物的视觉。页面为阅读留出空间，也为不同的表达保留音量。" />
+        <Local as="h3" en="Images and acknowledgments" zh="影像与致谢" />
+        <Local as="p" en="The record sleeves and marks are original SVG designs. Side A draws inspiration from Queen and Bohemian Rhapsody; Side B from X JAPAN and ENDLESS RAIN. This is an independent personal blog." zh="两面唱片的封套与标识为本站原创 SVG 设计。Side A 的灵感来自 Queen 与《波西米亚狂想曲》，Side B 的灵感来自 X JAPAN 与《ENDLESS RAIN》；本站是独立个人博客。" />
+        <p><Local en="Sample cover photographs are from " zh="示例文章封面来自 " /><a href="https://unsplash.com" target="_blank" rel="noopener noreferrer">Unsplash</a><Local en="; credits are in the project README. Chinese display type uses Noto Serif SC under the SIL Open Font License. Thank you to everyone who creates and shares freely." zh="，图片来源见项目 README。中文展示字体采用 Noto Serif SC，按 SIL Open Font License 使用。感谢每一位认真创作、自由分享的人。" /></p>
       </div>
     </div>
   </div>
