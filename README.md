@@ -2,7 +2,9 @@
 
 > 不同的声音，同一场共鸣。
 
-界面首次访问默认英文。顶部「中文 / EN」按钮即时切换语言，并在当前浏览器记住选择；导航、专栏说明、页面提示、搜索和写作台均提供双语。文章标题、摘要、正文、标签及网址保留原文，RSS 和搜索数据不因语言切换改变。语言与明暗主题、A/B 面状态相互独立。界面译文通过 `Local.astro` 与 `src/lib/i18n.ts` 维护，专栏英文说明在 `src/data/english.ts`，写作台译文在 `src/data/studio-english.json`。
+首次访问默认英文。顶部「中文 / EN」按钮即时切换语言，并在当前浏览器记住选择；导航、专栏说明、页面提示、搜索和写作台均提供双语。现有 6 篇文章另存了完整英文译稿，切换语言时，文章标题、摘要、正文、标签、目录与搜索结果同步切换。中文原文和文章网址保留，译稿不会计为额外文章。RSS 与写作台继续使用原稿；搜索同时检索两种语言，每篇文章只显示一个结果。语言与明暗主题、A/B 面状态相互独立。界面译文通过 `Local.astro` 与 `src/lib/i18n.ts` 维护，专栏英文说明在 `src/data/english.ts`，写作台译文在 `src/data/studio-english.json`。
+
+文章译稿保存在 `src/content/translations/en/<原文章 slug>.md`，与中文源文件分别维护。译稿包含 `translationLanguage: en`、英文 `title`、`description`、`tags`、`coverAlt`、Markdown 正文及 `sourceHash`。中文标题、摘要、标签、图片说明或正文修改后，旧译稿会暂停展示，英文页面提示当前先展示原文；新建、修改、撤下或删除文章均不需要同时编辑译稿。同步完成英文内容后，运行 `npm run translation:hash -- <slug>`，将输出的版本指纹写入译稿。这个命令只计算原稿指纹，不生成或更新译文；不要通过只更新指纹来掩盖未同步的翻译。发布后，两种语言共用原文章地址，各自的目录链接可直接访问，原中文段落链接继续有效。
 
 源码仓库：[ElysiaTT/Bohemia](https://github.com/ElysiaTT/Bohemia) · 默认分支：`main`
 

@@ -11,17 +11,19 @@ function fixture(stored = undefined, blocked = false) {
   const placeholder = {dataset: {i18nAttributes: JSON.stringify({placeholder: ['Search articles…', '搜索文章…'], 'aria-label': ['Search articles', '搜索文章']})}, attributes: {}, closest:()=>null, setAttribute(key,value) {this.attributes[key] = value;}};
   const button = {disabled: true, attributes: {}, listeners: {}, setAttribute(key,value){this.attributes[key]=value;},getAttribute(key){return this.attributes[key];},addEventListener(key,callback){this.listeners[key]=callback;}};
   const article = {dataset: {en: 'Must not replace this article', zh: '不得替换原文'}, closest:()=>({}), textContent: 'Claude plays robotics 的原文', value: '尚未保存的正文 **Markdown**'};
+  const blocks = ['en', 'zh'].flatMap(language => ['body', 'toc'].map(kind => ({dataset: {articleLanguage: language}, kind, inert: false, attributes: {}, closest(){return this.kind === 'body' ? this : null;}, setAttribute(key,value){this.attributes[key]=value;}})));
+  const injected = {dataset: {articleLanguage: 'zh'}, inert: false, attributes: {}, closest:()=>article, setAttribute(){throw Error('Nested authored content must not be modified');}};
   globalThis.localStorage = {setItem(key,value){if(blocked)throw Error('storage unavailable'); storage.set(key,value);}};
   globalThis.document = Object.assign(new EventTarget(), {
     documentElement: {dataset: {language: normalizeLanguage(stored)}, lang: 'en'},
     querySelectorAll(selector) {
-      return selector === '[data-en][data-zh]' ? [label, title, article] : selector === '[data-i18n-attributes]' ? [placeholder, metadata] : selector === '[data-language-toggle]' ? [button] : [];
+      return selector === '[data-en][data-zh]' ? [label, title, article] : selector === '[data-i18n-attributes]' ? [placeholder, metadata] : selector === '[data-language-toggle]' ? [button] : selector === '[data-article-language]' ? [...blocks, injected] : [];
     },
   });
   globalThis.window = new EventTarget();
   let notifications = 0;
   document.addEventListener('bohemia:language', () => notifications++);
-  return {storage,label,title,metadata,placeholder,button,article,notifications:()=>notifications};
+  return {storage,label,title,metadata,placeholder,button,article,blocks,notifications:()=>notifications};
 }
 
 test('New visits default to English and initialize a working Chinese switch', () => {
@@ -69,4 +71,31 @@ test('Cross-tab language changes do not write storage again', () => {
   window.dispatchEvent(event);
   assert.equal(view.label.textContent, '探索专栏');
   assert.equal(view.storage.size, 0);
+});
+
+test('Language changes expose only the selected article body and table of contents without replacing either body', () => {
+  const view = fixture();
+  const textByBlock = new Map(view.blocks.map(block => [block, block.textContent = block.dataset.articleLanguage === 'en' ? 'English body with links and code' : '中文原文及链接代码']));
+  initLanguage();
+  for (const language of ['zh', 'en', 'zh', 'en']) {
+    setLanguage(language);
+    for (const block of view.blocks) {
+      assert.equal(block.inert, block.dataset.articleLanguage !== language);
+      assert.equal(block.attributes['aria-hidden'], String(block.dataset.articleLanguage !== language));
+      assert.equal(block.textContent, textByBlock.get(block));
+    }
+  }
+});
+
+test('An existing Chinese section link opens its original body without changing the saved preference', () => {
+  const view = fixture('en');
+  let scrolled = false;
+  globalThis.location = {hash: '#old-chinese-heading'};
+  document.getElementById = () => ({closest:()=>({dataset:{articleLanguage:'zh'}}), scrollIntoView(){scrolled = true;}});
+  try {
+    initLanguage();
+    assert.equal(document.documentElement.lang, 'zh-CN');
+    assert.equal(view.storage.get(LANGUAGE_KEY), 'en');
+    assert.equal(scrolled, true);
+  } finally { delete globalThis.location; }
 });

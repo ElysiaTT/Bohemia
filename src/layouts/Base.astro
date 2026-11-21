@@ -7,10 +7,10 @@ import { withBase } from '../lib/posts';
 import '../styles/global.css';
 
 interface Props { title?: string; titleZh?: string; description?: string; descriptionZh?: string; image?: string; article?: boolean; noindex?: boolean }
-const { title, titleZh = title, description = "bohemia's rain — between reason and resonance. Research, models and machines on Side A; music, photography and life on Side B.", descriptionZh = site.description, image = 'images/bohemia-og.png', article = false, noindex = false } = Astro.props;
+const { title, titleZh = title, description = "bohemia's rain — between reason and resonance. Research, models and machines on Side A; music, photography and life on Side B.", descriptionZh, image = 'images/bohemia-og.png', article = false, noindex = false } = Astro.props;
 const pageTitle = title ? `${title} · ${site.title}` : `${site.title} — ${site.subtitle}`;
 const pageTitleZh = titleZh ? `${titleZh} · ${site.title}` : `${site.title} — ${site.subtitle}`;
-const pageDescriptionZh = article ? description : descriptionZh;
+const pageDescriptionZh = descriptionZh ?? (article ? description : site.description);
 const canonical = new URL(Astro.url.pathname, Astro.site || Astro.url.origin);
 const ogImage = new URL(withBase(image), Astro.site || Astro.url.origin);
 const nav = [ ['writing/', 'Writing', '文章'], ['notes/', 'Notes', '碎片'], ['archive/', 'Archive', '归档'], ['about/', 'About', '关于'] ];

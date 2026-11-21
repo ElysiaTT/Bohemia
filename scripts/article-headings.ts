@@ -12,9 +12,11 @@ export function articleHeadings(): HastPluginEntry {
         if ('children' in node) node.children.forEach(visit);
       };
       visit(root);
-      if (!headings.some(heading => heading.depth === 1)) return;
-      for (const { node, depth } of headings) {
-        if (node.type === 'element') context.replaceNode(node, { ...node, tagName: `h${articleHeadingDepth(depth, true)}` });
+      const shift = headings.some(heading => heading.depth === 1);
+      const english = (context.data.astro as {frontmatter?: {translationLanguage?: string}} | undefined)?.frontmatter?.translationLanguage === 'en';
+      if (!shift && !english) return;
+      for (const [index, { node, depth }] of headings.entries()) {
+        if (node.type === 'element') context.replaceNode(node, { ...node, tagName: `h${articleHeadingDepth(depth, shift)}`, ...(english ? {properties: {...node.properties, id: `en-section-${index + 1}`}} : {}) });
       }
     },
   };

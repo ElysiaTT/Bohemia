@@ -1,5 +1,6 @@
 // Small, framework-free interactions; all articles remain readable without JavaScript.
-import {text, postCount, categoryName, LANGUAGE_EVENT} from '../lib/i18n';
+import {text, postCount, categoryName, currentLanguage, LANGUAGE_EVENT} from '../lib/i18n';
+import {searchPostText, displayedSearchPost, type SearchPost} from '../lib/search-posts';
 import {initLanguage} from './language';
 const themeButton = document.querySelector<HTMLButtonElement>('.theme-toggle');
 const updateThemeLabel = () => {
@@ -30,7 +31,6 @@ const closeMenu = () => {
 matchMedia('(min-width: 601px)').addEventListener('change', event => { if (event.matches) closeMenu(); });
 document.addEventListener('keydown', event => { if (event.key === 'Escape' && menuButton?.getAttribute('aria-expanded') === 'true') { closeMenu(); menuButton.focus(); } });
 
-type SearchPost = { title: string; description: string; category: string; tags: string[]; body: string; url: string };
 const dialog = document.querySelector<HTMLDialogElement>('#search-dialog');
 const searchInput = document.querySelector<HTMLInputElement>('#search-input');
 const results = document.querySelector<HTMLElement>('#search-results');
@@ -56,12 +56,13 @@ const search = async () => {
     });
     const posts = await searchPosts;
     if (version !== searchVersion) return;
-    const matches = posts.filter(post => `${post.title} ${post.description} ${post.category} ${post.tags.join(' ')} ${post.body}`.toLocaleLowerCase().includes(term));
+    const matches = posts.filter(post => searchPostText(post).includes(term));
     results.replaceChildren(textNode('p', text(`${postCount(matches.length, 'en')} found`, `找到 ${matches.length} 篇文章`), 'search-count'));
     if (!matches.length) results.append(textNode('p', text('No matches yet. Try another keyword?', '还没有写到这里。换个关键词试试？'), 'search-hint'));
     for (const post of matches) {
+      const displayed = displayedSearchPost(post, currentLanguage());
       const link = document.createElement('a'); link.href = post.url; link.className = 'search-result';
-      link.append(textNode('span', categoryName(post.category), 'category-label'), textNode('h3', post.title), textNode('p', post.description));
+      link.append(textNode('span', categoryName(post.category), 'category-label'), textNode('h3', displayed.title), textNode('p', displayed.description));
       results.append(link);
     }
   } catch {
@@ -112,8 +113,9 @@ document.querySelector<HTMLButtonElement>('[data-share]')?.addEventListener('cli
 });
 const progress = document.querySelector<HTMLElement>('.reading-progress');
 if (progress) {
-  const update = () => { const article = document.querySelector<HTMLElement>('.prose'); if (!article) return; const end = article.offsetTop + article.offsetHeight - innerHeight; const ratio = end > 0 ? Math.max(0, Math.min(1, scrollY / end)) : 1; progress.style.transform = `scaleX(${ratio})`; };
+  const update = () => { const article = document.querySelector<HTMLElement>(`.prose[data-article-language="${currentLanguage()}"]`) || document.querySelector<HTMLElement>('.prose'); if (!article) return; const end = article.offsetTop + article.offsetHeight - innerHeight; const ratio = end > 0 ? Math.max(0, Math.min(1, scrollY / end)) : 1; progress.style.transform = `scaleX(${ratio})`; };
   addEventListener('scroll', update, { passive: true }); addEventListener('resize', update); update();
+  document.addEventListener(LANGUAGE_EVENT, update);
   const headings = document.querySelectorAll<HTMLElement>('.prose h2, .prose h3');
   const tocLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>('.toc a'));
   const observer = new IntersectionObserver(entries => { for (const entry of entries) if (entry.isIntersecting) tocLinks.forEach(link => link.classList.toggle('current', link.hash === `#${entry.target.id}`)); }, { rootMargin: '-10% 0px -70% 0px' });

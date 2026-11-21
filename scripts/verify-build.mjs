@@ -36,6 +36,8 @@ for (const file of htmlFiles) {
   const route = `${base}${relative.replace(/index\.html$/, '')}`;
   const h1Count = [...content.matchAll(/<h1(?:\s|>)/g)].length;
   if (h1Count !== 1) errors.push(`${relative}: expected one h1, got ${h1Count}`);
+  const ids = [...content.matchAll(/\sid="([^"]+)"/g)].map(match => match[1]);
+  if (ids.length !== new Set(ids).size) errors.push(`${relative}: duplicate element IDs break bilingual section links`);
   for (const match of content.matchAll(/\b(?:href|src)="([^"]+)"/g)) checkReference(match[1], relative, route);
 }
 for (const file of files.filter(path => extname(path) === '.css')) {

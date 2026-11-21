@@ -1,0 +1,46 @@
+{
+  "checked_on": "2026-11-22",
+  "feature": "Complete English editions of the six existing articles, switched with the site language",
+  "type_check": { "files": 51, "errors": 0, "warnings": 0, "hints": 0 },
+  "automated_tests_passed": 33,
+  "translated_articles": [
+    "model4robotics",
+    "the-first-step",
+    "a-small-static-blog",
+    "design-with-space",
+    "a-walk-without-a-plan",
+    "notes-that-grow"
+  ],
+  "scope": ["Titles and summaries", "Complete Markdown bodies", "Tags and cover descriptions", "Contents and section links", "Article cards and archive titles", "Search results and bilingual search matching", "Reading time and page metadata"],
+  "content_checks": {
+    "all_six_translations_match_current_source_fingerprints": true,
+    "original_chinese_files_unchanged": true,
+    "matching_section_structure_and_reference_links": true,
+    "no_duplicate_ids_in_generated_pages": true,
+    "english_and_original_contents_links_resolve": true,
+    "original_chinese_section_links_remain_accessible": true,
+    "no_untranslated_prose_visible_in_english_mode": true,
+    "only_selected_body_and_contents_are_accessible": true,
+    "language_switch_does_not_replace_authored_html_or_editor_fields": true,
+    "stale_translations_are_not_presented_as_current": true,
+    "new_or_revised_articles_can_publish_without_an_english_translation": true
+  },
+  "build": {
+    "bases": ["/", "/Bohemia/"],
+    "html_pages": 14,
+    "local_references": 461,
+    "public_posts": 6,
+    "translations_are_not_extra_posts": true
+  },
+  "preserved": {
+    "article_urls_and_publication_dates": true,
+    "all_14_columns_and_side_order": true,
+    "rss_matches_previous_deployment": true,
+    "studio_snapshot_matches_previous_deployment": true,
+    "original_search_records_preserved_with_english_fields_added": true,
+    "new_dependencies": 0
+  },
+  "verification_method": "The actual controllers were exercised against DOM fixtures. Both rendered language editions were inspected with a static HTML audit, checking visibility markers, complete bodies, section references and translated metadata. These checks do not replace browser rendering tests.",
+  "browser_checks": { "status": "unavailable", "reason": "The browser access host was unavailable. Browser visual and click-through checks were not completed." },
+  "target": "https://elysiatt.github.io/Bohemia/"
+}

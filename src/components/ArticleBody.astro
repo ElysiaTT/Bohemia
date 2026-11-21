@@ -1,0 +1,15 @@
+---
+import type {render} from 'astro:content';
+type Rendered = Awaited<ReturnType<typeof render>>;
+interface Props { original: Rendered; translated?: Rendered; originalLanguage: string; stale?: boolean }
+const {original, translated, originalLanguage, stale = false} = Astro.props;
+const Original = original.Content;
+const English = translated?.Content;
+---
+{English ? <>
+  <div class="prose" data-authored-content data-article-language="en" lang="en" aria-hidden="false"><English /></div>
+  <div class="prose" data-authored-content data-article-language="zh" lang={originalLanguage} aria-hidden="true" inert><Original /></div>
+</> : <>
+  {originalLanguage === 'zh-CN' && <p class="translation-note" data-article-language="en" lang="en">{stale ? 'The English translation is being updated. The original article is shown below.' : 'An English translation is not available yet. The original article is shown below.'}</p>}
+  <div class="prose" data-authored-content lang={originalLanguage}><Original /></div>
+</>}

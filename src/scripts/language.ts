@@ -10,6 +10,13 @@ export function applyLanguage(language: Language, scope: ParentNode = document) 
     const values = JSON.parse(element.dataset.i18nAttributes!) as Record<string, [string, string]>;
     for (const [attribute, pair] of Object.entries(values)) element.setAttribute(attribute, pair[language === 'zh' ? 1 : 0]);
   });
+  scope.querySelectorAll<HTMLElement>('[data-article-language]').forEach(element => {
+    const content = element.closest('[data-authored-content]');
+    if (content && content !== element) return;
+    const selected = element.dataset.articleLanguage === language;
+    element.setAttribute('aria-hidden', String(!selected));
+    element.inert = !selected;
+  });
 }
 
 export function setLanguage(value: unknown, persist = true) {
@@ -35,4 +42,17 @@ export function initLanguage() {
     button.addEventListener('click', () => setLanguage(document.documentElement.dataset.language === 'zh' ? 'en' : 'zh'));
   });
   window.addEventListener('storage', event => { if (event.key === LANGUAGE_KEY) setLanguage(event.newValue, false); });
+  const revealArticleHash = () => {
+    if (typeof location === 'undefined' || !location.hash) return;
+    let id: string;
+    try { id = decodeURIComponent(location.hash.slice(1)); } catch { return; }
+    const target = document.getElementById(id);
+    const language = target?.closest<HTMLElement>('[data-article-language]')?.dataset.articleLanguage;
+    if ((language === 'en' || language === 'zh') && language !== document.documentElement.dataset.language) {
+      setLanguage(language, false);
+      target?.scrollIntoView();
+    }
+  };
+  window.addEventListener('hashchange', revealArticleHash);
+  revealArticleHash();
 }

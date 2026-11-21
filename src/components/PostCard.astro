@@ -1,16 +1,17 @@
 ---
 import type { Post } from '../lib/posts';
-import { postUrl, readingTime, formatDate, withBase } from '../lib/posts';
+import { postUrl, readingTime, formatDate, withBase, englishData } from '../lib/posts';
 import Icon from './Icon.astro';
 import Local from './Local.astro';
 import {categoryName, readTime, attributes} from '../lib/i18n';
 interface Props { post: Post; index?: number; headingTag?: 'h3' | 'h5' }
 const { post, index = 0, headingTag: Heading = 'h3' } = Astro.props;
+const english = englishData(post);
 ---
 <article class="post-card" data-category={post.data.category}>
   <a class="post-image-link" href={postUrl(post)} tabindex="-1" aria-hidden="true"><img src={withBase(post.data.cover || 'images/forest.webp')} alt="" width="720" height="480" loading="lazy" /><span class="image-index">0{index + 1}</span><span class="image-arrow"><Icon name="diagonal" size={18} /></span></a>
   <div class="post-card-meta"><Local class={`category-label category-${post.data.category}`} en={categoryName(post.data.category, 'en')} zh={post.data.category} /><time datetime={post.data.date.toISOString()}>{formatDate(post.data.date)}</time></div>
-  <Heading class="post-card-title"><a href={postUrl(post)}>{post.data.title}</a></Heading>
-  <p>{post.data.description}</p>
-  <div class="post-card-bottom"><Local en={readTime(readingTime(post), 'en')} zh={readTime(readingTime(post), 'zh')} /><a href={postUrl(post)} {...attributes({'aria-label': [`Read: ${post.data.title}`, `阅读：${post.data.title}`]})}><Local en="Read on" zh="继续阅读" /><Icon name="arrow" size={15} /></a></div>
+  <Heading class="post-card-title"><a href={postUrl(post)}><Local en={english.title} zh={post.data.title} /></a></Heading>
+  <Local as="p" en={english.description} zh={post.data.description} />
+  <div class="post-card-bottom"><Local en={readTime(readingTime({...post, body: post.english?.body || post.body}), 'en')} zh={readTime(readingTime(post), 'zh')} /><a href={postUrl(post)} {...attributes({'aria-label': [`Read: ${english.title}`, `阅读：${post.data.title}`]})}><Local en="Read on" zh="继续阅读" /><Icon name="arrow" size={15} /></a></div>
 </article>

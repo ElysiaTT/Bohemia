@@ -22,4 +22,15 @@ const posts = defineCollection({
   }),
 });
 
-export const collections = { posts };
+const translations = defineCollection({
+  loader: glob({pattern: '**/*.md', base: './src/content/translations/en'}),
+  schema: z.object({
+    translationLanguage: z.literal('en'),
+    sourceHash: z.string().regex(/^[a-f0-9]{64}$/),
+    title: z.string(),
+    description: z.string(),
+    coverAlt: z.string().default(''),
+    tags: z.array(z.string()).default([]),
+  }),
+});
+export const collections = { posts, translations };

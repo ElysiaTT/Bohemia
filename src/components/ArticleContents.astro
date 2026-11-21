@@ -1,0 +1,9 @@
+---
+type Heading = {depth: number; slug: string; text: string};
+interface Props {original: Heading[]; translated?: Heading[]}
+const {original, translated} = Astro.props;
+---
+{translated ? <>
+  <div data-article-language="en" aria-hidden="false">{translated.filter(heading => heading.depth <= 3).map(heading => <a class:list={{'toc-sub': heading.depth === 3}} href={`#${heading.slug}`}>{heading.text}</a>)}</div>
+  <div data-article-language="zh" aria-hidden="true" inert>{original.filter(heading => heading.depth <= 3).map(heading => <a class:list={{'toc-sub': heading.depth === 3}} href={`#${heading.slug}`}>{heading.text}</a>)}</div>
+</> : original.filter(heading => heading.depth <= 3).map(heading => <a class:list={{'toc-sub': heading.depth === 3}} href={`#${heading.slug}`}>{heading.text}</a>)}
